@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieStageOne</string>
+    <string name="app_name">Movies Api</string>
 
     <string name="movies_type_popular_label">Popular</string>
     <string name="movies_type_popular_value">popular</string>
@@ -21,6 +21,8 @@
     <string name="vote_example">7.7</string>
     <string name="overview">Overview :</string>
     <string name="filter">filter</string>
+    <string name="not_provided">Not Provided</string>
+    <string name="movie_details">Movie Details</string>
 
 
 </resources>

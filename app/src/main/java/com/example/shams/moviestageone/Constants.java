@@ -1,7 +1,7 @@
 package com.example.shams.moviestageone;
 
 /**
- * Created by shams on 15/03/18.
+ * Created by shams keshk on 15/03/18.
  */
 
 public class Constants {
@@ -24,7 +24,7 @@ public class Constants {
     public static final String IMAGE_SIZE_W154 = "w154";
     public static final String IMAGE_SIZE_W185 = "w185";
 
-
+    public static final String MOVIE_OBJECT_KEY = "movie_object";
 
 
 }

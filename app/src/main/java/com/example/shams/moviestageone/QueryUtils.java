@@ -121,7 +121,7 @@ public final class QueryUtils {
                 moviesList.add(new Movies(voteAverage ,originalTitle,posterPath,releaseDate,overview));
             }
         }catch (JSONException e){
-            Log.e(LOG_TAG , "Error While extract Json Data");
+            e.printStackTrace();
         }
 
         return moviesList;

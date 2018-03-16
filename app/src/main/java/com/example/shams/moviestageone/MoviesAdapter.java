@@ -3,12 +3,10 @@ package com.example.shams.moviestageone;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 
 import com.squareup.picasso.Picasso;
 
@@ -24,8 +22,6 @@ import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterViewHolder> {
 
-    private final String LOG_TAG = MoviesAdapter.class.getSimpleName();
-    private Context mContext;
     private List<Movies> mMoviesList;
     private MovieListClickListener movieListClickListener;
 
@@ -35,9 +31,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
     }
 
 
-
-    public MoviesAdapter(Context context, ArrayList<Movies> moviesArrayList,MovieListClickListener movieListClickListener){
-        mContext = context;
+    public MoviesAdapter(ArrayList<Movies> moviesArrayList, MovieListClickListener movieListClickListener) {
         mMoviesList = moviesArrayList;
         this.movieListClickListener = movieListClickListener;
     }
@@ -69,8 +63,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
         int layoutResourceOfListItemId = R.layout.movie_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(layoutResourceOfListItemId , parent , false);
-        AdapterViewHolder adapterViewHolder = new AdapterViewHolder(view);
-        return adapterViewHolder;
+
+        return new AdapterViewHolder(view);
     }
 
     @Override
@@ -81,7 +75,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
                 .appendPath(Constants.IMAGE_SIZE_W185)
                 .appendEncodedPath(movie.getPosterPath())
                 .build();
-        Log.e(LOG_TAG , uri.toString());
 
         Picasso.get().load(uri).into(holder.mMoviePosterImageView);
 

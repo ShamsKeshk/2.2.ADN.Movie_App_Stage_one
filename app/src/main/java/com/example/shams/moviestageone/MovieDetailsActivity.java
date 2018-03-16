@@ -1,16 +1,14 @@
 package com.example.shams.moviestageone;
 
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -26,7 +24,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tv_movie_overview_id)
     TextView mMovieOverviewTextView;
 
-
     private Movies movie;
 
     @Override
@@ -35,8 +32,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
 
-        if (getIntent().hasExtra("movie_object")){
-            movie =(Movies) getIntent().getSerializableExtra("movie_object");
+        if (getIntent().hasExtra(Constants.MOVIE_OBJECT_KEY)) {
+            movie = (Movies) getIntent().getSerializableExtra(Constants.MOVIE_OBJECT_KEY);
         }
 
         if (movie.getPosterPath() != null){
@@ -46,25 +43,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     .build();
 
             Picasso.get().load(imageUri).into(mMoviePosterImageView);
+        } else {
+            mMoviePosterImageView.setImageResource(R.drawable.no_image);
         }
 
-        if (movie.getOriginalTitle() != null){
-            mMovieOriginalTitleTextView.setText(movie.getOriginalTitle());
+        setTextToView(movie.getOriginalTitle(), mMovieOriginalTitleTextView);
+
+        setTextToView(movie.getReleaseDate(), mMovieReleaseDateTextView);
+
+        setTextToView(String.valueOf(movie.getVoteAverage()), mMovieVoteAverageTextView);
+
+        setTextToView(movie.getOverview(), mMovieOverviewTextView);
+    }
+
+    private void setTextToView(String text, TextView textView) {
+
+        if (text != null) {
+            textView.setText(text);
+        } else {
+            textView.setText(R.string.not_provided);
         }
-
-        if (movie.getReleaseDate() != null){
-            mMovieReleaseDateTextView.setText(movie.getReleaseDate());
-        }
-
-        if (movie.getVoteAverage() != null){
-            mMovieVoteAverageTextView.setText(String.valueOf(movie.getVoteAverage()));
-        }
-
-        if (movie.getOverview() != null){
-            mMovieOverviewTextView.setText(movie.getOverview());
-        }
-
-
-
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movies>> {
 
-    private final String TAG = MovieAsyncTaskLoader.class.getSimpleName();
     private String mUrl ;
     private List<Movies> mMoviesList = null;
 
@@ -34,8 +33,8 @@ public class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movies>> {
         if (mUrl == null){
             return null;
         }
-        List<Movies> moviesList = QueryUtils.fetchMovieData(mUrl);
-        return moviesList;
+
+        return QueryUtils.fetchMovieData(mUrl);
     }
 
 

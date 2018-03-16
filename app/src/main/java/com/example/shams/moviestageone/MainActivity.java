@@ -5,23 +5,18 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,12 +47,11 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         ButterKnife.bind(this);
 
         GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this , 2);
-
-        recyclerView.setLayoutManager(new GridLayoutManager(this , 3));
+                new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        moviesAdapter = new MoviesAdapter(this , new ArrayList<Movies>() , this);
+        moviesAdapter = new MoviesAdapter(new ArrayList<Movies>() , this);
 
         recyclerView.setAdapter(moviesAdapter);
 
@@ -68,7 +62,6 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         }else {
             displayConnectionErrorHideData();
         }
-
 
     }
 
@@ -105,11 +98,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
     @Override
     public void onLoadFinished(Loader<List<Movies>> loader, List<Movies> data) {
         progressBar.setVisibility(View.GONE);
-        if (NetworkStatues.isConnected(this)){
-            hideConnectionErrorDisplayData();
-        }else {
-            displayConnectionErrorHideData();
-        }
+
         moviesAdapter.clearAdapter();
 
         if (data != null){
@@ -126,7 +115,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
     public void onMovieListClickListener(int position) {
         Movies movies = moviesAdapter.getItem(position);
         Intent intent = new Intent(MainActivity.this , MovieDetailsActivity.class);
-        intent.putExtra("movie_object",movies);
+        intent.putExtra(Constants.MOVIE_OBJECT_KEY, movies);
         startActivity(intent);
     }
 
