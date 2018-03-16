@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="160dp"
-    android:layout_height="210dp"
-    android:padding="16dp">
+    android:layout_width="@dimen/frame_of_list_item_activity_width"
+    android:layout_height="@dimen/frame_of_list_item_activity_height">
 
     <ImageView
+        android:id="@+id/iv_movie_poster"
+        style="@style/width_height_match_parent"
         android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/movie_test"/>
-    <TextView
-        android:id="@+id/tv_movie_title"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:background="#55000000"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:text="Movie Name" />
-
+        android:padding="@dimen/padding_5dp"
+        android:src="@drawable/no_image" />
 </FrameLayout>

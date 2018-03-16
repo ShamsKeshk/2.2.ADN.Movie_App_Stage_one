@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">MovieStageOne</string>
+
+    <string name="movies_type_popular_label">Popular</string>
+    <string name="movies_type_popular_value">popular</string>
+
+    <string name="movies_type_top_rated_label">Top Rated</string>
+    <string name="movies_type_top_rated_value">top_rated</string>
+
+    <string name="movies_type_upcoming_label">Upcoming</string>
+    <string name="movies_type_upcoming_value">upcoming</string>
+
+    <string name="movies_type_now_playing_label">Now playing</string>
+    <string name="movies_type_now_playing_value">now_playing</string>
+
+    <string name="movies_type_key">movies_type_key</string>
+    <string name="no_internet_connection_connect_and_try_again">No Internet Connection , connect and try again</string>
+    <string name="release">Release :</string>
+    <string name="movie_name">Movie name</string>
+    <string name="date_example">1980/11/27</string>
+    <string name="vote_example">7.7</string>
+    <string name="overview">Overview :</string>
+    <string name="filter">filter</string>
+
+
 </resources>

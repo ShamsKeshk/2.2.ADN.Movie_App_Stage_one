@@ -1,10 +1,12 @@
 package com.example.shams.moviestageone;
 
+import java.io.Serializable;
+
 /**
  * Created by shams on 14/03/18.
  */
 
-public class Movies {
+public class Movies implements Serializable {
 
     private Double voteAverage ;
     private String originalTitle ;

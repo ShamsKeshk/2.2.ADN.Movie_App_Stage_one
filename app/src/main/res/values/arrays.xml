@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="movies_type_lable">
+        <item>@string/movies_type_popular_label</item>
+        <item>@string/movies_type_top_rated_label</item>
+        <item>@string/movies_type_upcoming_label</item>
+        <item>@string/movies_type_now_playing_label</item>
+    </string-array>
+
+    <string-array name="movies_type_value">
+        <item>@string/movies_type_popular_value</item>
+        <item>@string/movies_type_top_rated_value</item>
+        <item>@string/movies_type_upcoming_value</item>
+        <item>@string/movies_type_now_playing_value</item>
+    </string-array>
+</resources>

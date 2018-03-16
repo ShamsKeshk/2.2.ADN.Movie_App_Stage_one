@@ -38,9 +38,11 @@ public class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movies>> {
         return moviesList;
     }
 
+
     @Override
     public void deliverResult(List<Movies> data) {
         mMoviesList = data;
         super.deliverResult(data);
     }
+
 }
