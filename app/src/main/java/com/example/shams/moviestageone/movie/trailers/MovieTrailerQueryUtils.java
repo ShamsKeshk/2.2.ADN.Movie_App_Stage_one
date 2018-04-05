@@ -1,7 +1,9 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.trailers;
 
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.shams.moviestageone.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,19 +19,18 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Created by shams on 14/03/18.
+ * Created by shams on 05/04/18.
  */
 
-public final class QueryUtils {
+public final class MovieTrailerQueryUtils  {
 
-    public static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    public static final String LOG_TAG = MovieTrailerQueryUtils.class.getSimpleName();
 
-    private QueryUtils(){
+    private MovieTrailerQueryUtils() {
+
     }
 
-
-
-    public static List<Movies> fetchMovieData(String url){
+    public static List<MovieTrailer> fetchMovieData(String url){
         //Done
 
         URL mUrl = createUrl(url);
@@ -41,8 +42,8 @@ public final class QueryUtils {
         }catch (IOException e){
             Log.e(LOG_TAG , "error While Fetching Data");
         }
-        List<Movies> moviesList = extractJsonData(jsonResponse);
-        return moviesList;
+        List<MovieTrailer> movieTrailersList = extractJsonData(jsonResponse);
+        return movieTrailersList;
     }
 
     private static URL createUrl(String url){
@@ -81,8 +82,9 @@ public final class QueryUtils {
         }
     }
 
-    private static List<Movies> extractJsonData(String jsonResponse){
-        List<Movies> moviesList = new ArrayList<>();
+    private static List<MovieTrailer> extractJsonData(String jsonResponse) {
+
+        List<MovieTrailer> movieTrailersList = new ArrayList<>();
 
         if (TextUtils.isEmpty(jsonResponse)){
             return null;
@@ -94,42 +96,27 @@ public final class QueryUtils {
             if (rootJsonObject.has(Constants.RESULTS_JSON_KEY)){
                 resultJsonArray = rootJsonObject.getJSONArray(Constants.RESULTS_JSON_KEY);
             }
-            int movieId = 0;
-            Double voteAverage = 0.0;
-            String originalTitle = "";
-            String posterPath = "";
-            String releaseDate = "";
-            String overview = "";
 
-            for (int i=0; i <resultJsonArray.length() ; i++){
+            String movieTrailerKey = "" ;
+            String movieTrailerName = "";
+
+            for (int i = 0; i < resultJsonArray.length(); i++){
                 JSONObject currentJsonObject = resultJsonArray.getJSONObject(i);
 
-                if (currentJsonObject.has("id")){
-                    movieId = currentJsonObject.getInt("id");
+                if (currentJsonObject.has("key")){
+                    movieTrailerKey = currentJsonObject.getString("key");
                 }
 
-                if (currentJsonObject.has(Constants.VOTE_AVERAGE_JSON_KEY)){
-                    voteAverage = currentJsonObject.getDouble(Constants.VOTE_AVERAGE_JSON_KEY);
-                }
-                if (currentJsonObject.has(Constants.ORIGINAL_TITLE_JSON_KEY)){
-                    originalTitle = currentJsonObject.getString(Constants.ORIGINAL_TITLE_JSON_KEY);
-                }
-                if (currentJsonObject.has(Constants.POSTER_PATH_JSON_KEY)){
-                    posterPath = currentJsonObject.getString(Constants.POSTER_PATH_JSON_KEY);
-                }
-                if (currentJsonObject.has(Constants.RELEASE_DATE_JSON_KEY)){
-                    releaseDate = currentJsonObject.getString(Constants.RELEASE_DATE_JSON_KEY);
-                }
-                if (currentJsonObject.has(Constants.OVERVIEW_JSON_KEY)){
-                    overview = currentJsonObject.getString(Constants.OVERVIEW_JSON_KEY);
+                if (currentJsonObject.has("name")){
+                    movieTrailerName = currentJsonObject.getString("name");
                 }
 
-                moviesList.add(new Movies(movieId,voteAverage ,originalTitle,posterPath,releaseDate,overview));
+                movieTrailersList.add(new MovieTrailer(movieTrailerKey, movieTrailerName));
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return moviesList;
+        return movieTrailersList;
     }
 }

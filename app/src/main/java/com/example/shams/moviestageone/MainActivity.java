@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,22 +47,22 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setHasFixedSize(true);
+            GridLayoutManager gridLayoutManager =
+                    new GridLayoutManager(this, 3);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            recyclerView.setHasFixedSize(true);
 
-        moviesAdapter = new MoviesAdapter(new ArrayList<Movies>() , this);
+            moviesAdapter = new MoviesAdapter(new ArrayList<Movies>(), this);
 
-        recyclerView.setAdapter(moviesAdapter);
+            recyclerView.setAdapter(moviesAdapter);
 
-        if (NetworkStatues.isConnected(this)){
-            hideConnectionErrorDisplayData();
-            loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_LOADER_ID ,null , MainActivity.this);
-        }else {
-            displayConnectionErrorHideData();
-        }
+            if (NetworkStatues.isConnected(this)) {
+                hideConnectionErrorDisplayData();
+                loaderManager = getLoaderManager();
+                loaderManager.initLoader(MOVIE_LOADER_ID, null, MainActivity.this);
+            } else {
+                displayConnectionErrorHideData();
+            }
 
     }
 
@@ -150,4 +151,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+
+
 }
