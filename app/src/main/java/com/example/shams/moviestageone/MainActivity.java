@@ -6,7 +6,6 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.shams.moviestageone.movie.favourite.FavouriteActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,9 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+
 
             GridLayoutManager gridLayoutManager =
                     new GridLayoutManager(this, 3);
@@ -132,6 +136,9 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         switch (id){
             case R.id.filter_icon :
                 startActivity(new Intent(MainActivity.this , SettingActivity.class));
+                return true;
+            case R.id.favourite_icon_id :
+                startActivity(new Intent(MainActivity.this , FavouriteActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

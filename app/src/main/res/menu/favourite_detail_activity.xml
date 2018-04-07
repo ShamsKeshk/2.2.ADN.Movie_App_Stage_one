@@ -3,17 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/favourite_icon_id"
+        android:id="@+id/favourite_icon_id_detail_activity"
         android:icon="@drawable/ic_star_yello_36px"
         android:orderInCategory="1"
         android:title="favourite"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/filter_icon"
-        android:icon="@drawable/ic_filter_list_white_36px"
-        android:orderInCategory="2"
-        android:title="@string/filter"
-        app:showAsAction="ifRoom" />
-
 
 </menu>

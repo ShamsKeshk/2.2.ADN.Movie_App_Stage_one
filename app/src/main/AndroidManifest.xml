@@ -19,19 +19,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieDetailsActivity"
+        <activity
+            android:name=".MovieDetailsActivity"
             android:label="@string/movie_details"
             android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".SettingActivity"
+        <activity
+            android:name=".SettingActivity"
             android:label="@string/filter"
             android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
-
         </activity>
+        <activity android:name=".movie.favourite.FavouriteActivity"></activity>
+
+        <provider
+            android:authorities="com.example.shams.moviestageone"
+            android:name=".database.FMProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

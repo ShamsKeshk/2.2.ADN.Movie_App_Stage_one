@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.details;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 
+import com.example.shams.moviestageone.movie.details.MovieDetailsFragment;
 import com.example.shams.moviestageone.movie.reviews.MovieReviewsFragment;
 import com.example.shams.moviestageone.movie.trailers.MovieTrailerFragment;
 

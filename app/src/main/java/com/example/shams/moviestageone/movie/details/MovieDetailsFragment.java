@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.details;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.Movies;
+import com.example.shams.moviestageone.R;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;

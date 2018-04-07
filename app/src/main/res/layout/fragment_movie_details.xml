@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/default_padding"
-    tools:context="com.example.shams.moviestageone.MovieDetailsFragment">
+    tools:context="com.example.shams.moviestageone.movie.details.MovieDetailsFragment">
 
     <LinearLayout
         style="@style/width_match_parent_height_wrap_content"
