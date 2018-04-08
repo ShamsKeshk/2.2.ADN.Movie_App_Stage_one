@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
 
 public class FMProvider extends ContentProvider {
@@ -59,7 +60,7 @@ public class FMProvider extends ContentProvider {
 
                 break;
             default:
-                throw new IllegalArgumentException("can_not_query_for_invalid_uri)" + uri);
+                throw new IllegalArgumentException(getContext().getString(R.string.can_not_query_for_invalid_uri) + uri);
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -76,19 +77,20 @@ public class FMProvider extends ContentProvider {
             case MOVIES_ITEMS:
                 return insertValues(uri, contentValues);
             default:
-                throw new IllegalArgumentException("can_not_insert_values_for_invalid_uri)" + uri);
+                throw new IllegalArgumentException(getContext().getString(R.string.can_not_insert_values_for_invalid_uri) + uri);
         }
     }
 
     private Uri insertValues(Uri uri, ContentValues contentValues) {
-      //  validateInsertValues(contentValues);
+
+        validateInsertValues(contentValues);
 
         SQLiteDatabase sqLiteDatabase = fmDbHelper.getWritableDatabase();
 
         long id = sqLiteDatabase.insert(MoviesEntry.TABLE_NAME, null, contentValues);
 
         if (id == -1) {
-            Log.e(LOG_TAG, "failed_to_insert_row)" + uri);
+            Log.e(LOG_TAG, getContext().getString(R.string.failed_to_insert_row) + uri);
             return null;
         }
 
@@ -123,7 +125,7 @@ public class FMProvider extends ContentProvider {
 
                 return deletedRowId;
             default:
-                throw new IllegalArgumentException("can_cot_delete_values_of_invalid_uri)" + uri);
+                throw new IllegalArgumentException(getContext().getString(R.string.can_not_delete_values_of_invalid_uri) + uri);
         }
     }
 
@@ -138,7 +140,7 @@ public class FMProvider extends ContentProvider {
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateValues(uri, contentValues, selection, selectionArgs);
             default:
-                throw new IllegalArgumentException("can_cot_update_values_for_invalid_uri) " + uri);
+                throw new IllegalArgumentException(getContext().getString(R.string.can_not_update_values_for_invalid_uri) + uri);
         }
     }
 
@@ -146,7 +148,6 @@ public class FMProvider extends ContentProvider {
         if (contentValues.size() == 0) {
             return 0;
         }
-        validateUpdateValues(contentValues);
 
         SQLiteDatabase sqLiteDatabase = fmDbHelper.getWritableDatabase();
 
@@ -170,33 +171,32 @@ public class FMProvider extends ContentProvider {
             case MOVIES_ITEM_ID:
                 return MoviesEntry.CONTENT_ITEM_TYPE;
             default:
-                throw new IllegalStateException("Un Known Uri : " + uri + " That Match : " + matchUri);
+                throw new IllegalStateException(getContext().getString(R.string.un_known_uri) + uri + getContext().getString(R.string.that_match) + matchUri);
         }
     }
-
-    private void validateUpdateValues(ContentValues values) {
-
-        if (values.containsKey(MoviesEntry.COLUMN_IS_FAVOURITE)) {
-            Integer favouriteMovie = values.getAsInteger(MoviesEntry.COLUMN_IS_FAVOURITE);
-            validateIntegerValues(favouriteMovie, "MoviesEntry.COLUMN_IS_FAVOURITE");
-        }
-
-    }
-
 
     private void validateInsertValues(ContentValues values) {
 
         Integer movieId = values.getAsInteger(MoviesEntry.COLUMN_MOVIE_ID);
-        validateIntegerValues(movieId, "MoviesEntry.COLUMN_MOVIE_ID");
+        validateIntegerValues(movieId, getContext().getString(R.string.movie_id_has_invalid_or_null_value) + movieId);
 
         String movieName = values.getAsString(MoviesEntry.COLUMN_MOVIE_NAME);
-        validateStringValues(movieName, "MoviesEntry.COLUMN_MOVIE_NAME");
+        validateStringValues(movieName, getContext().getString(R.string.movie_name_has_invalid_or_null_value) + movieName);
+
+        String movieVoteAverage = values.getAsString(MoviesEntry.COLUMN_MOVIE_VOTE_AVERAGE);
+        validateStringValues(movieVoteAverage, getContext().getString(R.string.movie_vote_average_has_invalid_or_null_value) + movieVoteAverage);
+
+        String movieReleaseDate = values.getAsString(MoviesEntry.COLUMN_MOVIE_RELEASE_DATE);
+        validateStringValues(movieReleaseDate, getContext().getString(R.string.movie_release_date_has_invalid_or_null_value) + movieReleaseDate);
+
+        String movieOverview = values.getAsString(MoviesEntry.COLUMN_MOVIE_OVERVIEW);
+        validateStringValues(movieOverview, getContext().getString(R.string.movie_overview_has_invalid_or_null_value) + movieOverview);
 
         String moviePoster = values.getAsString(MoviesEntry.COLUMN_MOVIE_POSTER);
-        validateStringValues(moviePoster, "MoviesEntry.COLUMN_MOVIE_POSTER");
+        validateStringValues(moviePoster, getContext().getString(R.string.movie_poster_has_invalid_or_null_value) + moviePoster);
 
         Integer favouriteMovie = values.getAsInteger(MoviesEntry.COLUMN_IS_FAVOURITE);
-        validateIntegerValues(favouriteMovie, "MoviesEntry.COLUMN_IS_FAVOURITE");
+        validateIntegerValues(favouriteMovie, getContext().getString(R.string.movie_favourite_has_invalid_or_null_value) + favouriteMovie);
     }
 
     //Helper Methods

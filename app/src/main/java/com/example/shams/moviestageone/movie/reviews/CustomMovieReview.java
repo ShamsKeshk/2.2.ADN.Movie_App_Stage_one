@@ -9,8 +9,8 @@ import android.os.Parcelable;
 
 public class CustomMovieReview implements Parcelable {
 
-    String mAuthorName;
-    String mReviewContent;
+    private String mAuthorName;
+    private String mReviewContent;
 
     public CustomMovieReview(String mAuthorName, String mReviewContent) {
         this.mAuthorName = mAuthorName;

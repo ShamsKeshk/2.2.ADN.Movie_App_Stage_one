@@ -1,12 +1,12 @@
 package com.example.shams.moviestageone.movie.details;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-
-import com.example.shams.moviestageone.movie.details.MovieDetailsFragment;
+import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.movie.reviews.MovieReviewsFragment;
 import com.example.shams.moviestageone.movie.trailers.MovieTrailerFragment;
 
@@ -16,8 +16,11 @@ import com.example.shams.moviestageone.movie.trailers.MovieTrailerFragment;
 
 public class MovieDetailsFragmentAdapter extends FragmentPagerAdapter {
 
-    public MovieDetailsFragmentAdapter (FragmentManager fragmentManager){
+    private Context context;
+
+    public MovieDetailsFragmentAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
+        this.context = context;
     }
 
     @Override
@@ -44,11 +47,11 @@ public class MovieDetailsFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return "Details";
+                return context.getString(R.string.details_title);
             case 1:
-                return "Reviews";
+                return context.getString(R.string.reviews_title);
             case 2:
-                return "Trailers";
+                return context.getString(R.string.trailers_title);
             default:
                 return super.getPageTitle(position);
         }

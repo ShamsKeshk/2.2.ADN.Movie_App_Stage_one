@@ -2,6 +2,7 @@ package com.example.shams.moviestageone;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
     private MovieListClickListener movieListClickListener;
 
 
-    public interface MovieListClickListener{
-        void onMovieListClickListener(int position);
-    }
-
-
     public MoviesAdapter(ArrayList<Movies> moviesArrayList, MovieListClickListener movieListClickListener) {
         mMoviesList = moviesArrayList;
         this.movieListClickListener = movieListClickListener;
@@ -45,30 +41,29 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
         notifyDataSetChanged();
     }
 
-    public void clearAdapter(){
+    public void clearAdapter() {
         int size = mMoviesList.size();
         mMoviesList.clear();
-        notifyItemRangeRemoved(0 , size);
+        notifyItemRangeRemoved(0, size);
     }
 
-    public Movies getItem(int position){
+    public Movies getItem(int position) {
         return mMoviesList.get(position);
     }
 
-
-
+    @NonNull
     @Override
-    public AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         int layoutResourceOfListItemId = R.layout.movie_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(layoutResourceOfListItemId , parent , false);
+        View view = inflater.inflate(layoutResourceOfListItemId, parent, false);
 
         return new AdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position) {
         Movies movie = getItem(position);
 
         Uri uri = Uri.parse(Constants.BASE_IMAGE_URL).buildUpon()
@@ -85,16 +80,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.AdapterVie
         return mMoviesList.size();
     }
 
-    public class AdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public interface MovieListClickListener {
+        void onMovieListClickListener(int position);
+    }
 
+    public class AdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
         @BindView(R.id.iv_movie_poster)
         ImageView mMoviePosterImageView;
 
-        public AdapterViewHolder(View view){
+        public AdapterViewHolder(View view) {
             super(view);
-            ButterKnife.bind(this,view);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 

@@ -3,8 +3,6 @@ package com.example.shams.moviestageone;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by shams on 14/03/18.
  */
@@ -17,6 +15,7 @@ public class Movies implements Parcelable {
     private String releaseDate ;
     private String overview  ;
     private int movieId;
+
 
     public Movies(int movieId ,Double voteAverage, String originalTitle, String posterPath, String releaseDate, String overview) {
         this.voteAverage = voteAverage;

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.QueryUtils;
+import com.example.shams.moviestageone.network.connection.utils.FetchDataHttpConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,62 +27,25 @@ import java.util.Scanner;
 
 public final class ReviewQueryUtils {
 
-    public static final String LOG_TAG = ReviewQueryUtils.class.getSimpleName();
+    private static final String LOG_TAG = ReviewQueryUtils.class.getSimpleName();
 
     private ReviewQueryUtils() {
 
     }
 
     public static List<CustomMovieReview> fetchMovieData(String url){
-        //Done
 
-        URL mUrl = createUrl(url);
+        URL mUrl = FetchDataHttpConnection.createUrl(url);
 
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(mUrl);
+            jsonResponse = FetchDataHttpConnection.makeHttpRequest(mUrl);
         }catch (IOException e){
             Log.e(LOG_TAG , "error While Fetching Data");
         }
-        List<CustomMovieReview> movieReviewsList = extractJsonData(jsonResponse);
-        return movieReviewsList;
-    }
 
-    private static URL createUrl(String url){
-        //Done
-        URL mUrl = null;
-        try {
-            mUrl = new URL(url);
-        }catch (MalformedURLException e){
-            Log.e(LOG_TAG , "Invalid URL" );
-        }
-        return mUrl;
-    }
-
-    private static String makeHttpRequest(URL url) throws IOException{
-
-        //Done
-
-        if (url == null){
-            return null;
-        }
-
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream inputStream = httpURLConnection.getInputStream();
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter("\\A");
-
-            boolean hasNext = scanner.hasNext();
-            if (hasNext){
-                return scanner.next();
-            }else {
-                return null;
-            }
-        }finally {
-            httpURLConnection.disconnect();
-        }
+        return extractJsonData(jsonResponse);
     }
 
     private static List<CustomMovieReview> extractJsonData(String jsonResponse) {
@@ -95,8 +59,8 @@ public final class ReviewQueryUtils {
         try {
             JSONObject rootJsonObject = new JSONObject(jsonResponse);
             JSONArray resultJsonArray = new JSONArray();
-            if (rootJsonObject.has(Constants.RESULTS_JSON_KEY)){
-                resultJsonArray = rootJsonObject.getJSONArray(Constants.RESULTS_JSON_KEY);
+            if (rootJsonObject.has(Constants.JSON_KEY_RESULTS)){
+                resultJsonArray = rootJsonObject.getJSONArray(Constants.JSON_KEY_RESULTS);
             }
 
             String reviewAuthor = "" ;
@@ -105,12 +69,12 @@ public final class ReviewQueryUtils {
             for (int i = 0; i < resultJsonArray.length(); i++){
                 JSONObject currentJsonObject = resultJsonArray.getJSONObject(i);
 
-                if (currentJsonObject.has("author")){
-                    reviewAuthor = currentJsonObject.getString("author");
+                if (currentJsonObject.has(Constants.JSON_KEY_REVIEW_AUTHOR)){
+                    reviewAuthor = currentJsonObject.getString(Constants.JSON_KEY_REVIEW_AUTHOR);
                 }
 
-                if (currentJsonObject.has("content")){
-                    reviewContent = currentJsonObject.getString("content");
+                if (currentJsonObject.has(Constants.JSON_KEY_REVIEW_CONTENT)){
+                    reviewContent = currentJsonObject.getString(Constants.JSON_KEY_REVIEW_CONTENT);
                 }
 
                 movieReviewsList.add(new CustomMovieReview(reviewAuthor, reviewContent));

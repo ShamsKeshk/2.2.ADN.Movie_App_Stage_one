@@ -9,8 +9,7 @@
     android:padding="1dp"
     card_view:cardUseCompatPadding="true"
     card_view:cardPreventCornerOverlap="false"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:foreground="?selectableItemBackground">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +28,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_star_yello_36px"/>
+                android:src="@drawable/ic_play_arrow_white_36px"/>
         </FrameLayout>
 
         <TextView

@@ -9,28 +9,28 @@ import java.util.List;
  * Created by shams on 05/04/18.
  */
 
-public class MovieTrailerAsyncTask  extends AsyncTaskLoader<List<MovieTrailer>> {
+public class MovieTrailerAsyncTask extends AsyncTaskLoader<List<MovieTrailer>> {
 
-    private String mUrl ;
+    private String mUrl;
     private List<MovieTrailer> mMovieTrailersList = null;
 
-    public MovieTrailerAsyncTask(Context context , String url ){
+    public MovieTrailerAsyncTask(Context context, String url) {
         super(context);
         mUrl = url;
     }
 
     @Override
     protected void onStartLoading() {
-        if (mMovieTrailersList != null){
+        if (mMovieTrailersList != null) {
             deliverResult(mMovieTrailersList);
-        }else {
+        } else {
             forceLoad();
         }
     }
 
     @Override
     public List<MovieTrailer> loadInBackground() {
-        if (mUrl == null){
+        if (mUrl == null) {
             return null;
         }
 

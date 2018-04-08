@@ -8,18 +8,21 @@ import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
 
 public class FMDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
 
-    public static final String DATABASE_NAME = "movies.db";
+    public static final String DATABASE_NAME = "movie.db";
 
-    private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + MoviesEntry.TABLE_NAME + "(" +
+    public static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + MoviesEntry.TABLE_NAME + "(" +
             MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," +
-            MoviesEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL ," +
+            MoviesEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL ," +
             MoviesEntry.COLUMN_MOVIE_NAME + " TEXT NOT NULL ," +
+            MoviesEntry.COLUMN_MOVIE_RELEASE_DATE + " TEXT NOT NULL ," +
+            MoviesEntry.COLUMN_MOVIE_VOTE_AVERAGE + " TEXT NOT NULL ," +
+            MoviesEntry.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL ," +
             MoviesEntry.COLUMN_MOVIE_POSTER + " TEXT NOT NULL ," +
             MoviesEntry.COLUMN_IS_FAVOURITE + " INTEGER NOT NULL DEFAULT 0 ) ;";
 
-    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + MoviesEntry.TABLE_NAME;
+    public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + MoviesEntry.TABLE_NAME;
 
 
     public FMDbHelper(Context context) {

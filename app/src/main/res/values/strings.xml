@@ -26,6 +26,32 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="can_not_query_for_invalid_uri">can not query for invalid uri)</string>
+    <string name="can_not_insert_values_for_invalid_uri">can not insert values for invalid uri)</string>
+    <string name="failed_to_insert_row">failed to insert row)</string>
+    <string name="can_not_delete_values_of_invalid_uri">can not delete values of invalid uri)</string>
+    <string name="can_not_update_values_for_invalid_uri">can not update values for invalid uri)</string>
+    <string name="movie_id_has_invalid_or_null_value">Movie ID has invalid Or null value :</string>
+    <string name="movie_name_has_invalid_or_null_value">Movie Name has invalid Or null value :</string>
+    <string name="movie_vote_average_has_invalid_or_null_value">Movie Average has invalid Or null value :</string>
+    <string name="movie_release_date_has_invalid_or_null_value">Movie Release Date has invalid Or null value :</string>
+    <string name="movie_overview_has_invalid_or_null_value">Movie Overview has invalid Or null value :</string>
+    <string name="movie_poster_has_invalid_or_null_value">Movie Poster has invalid Or null value :</string>
+    <string name="movie_favourite_has_invalid_or_null_value">Favourite Movie has invalid Or null value +</string>
+    <string name="un_known_uri">Un Known Uri :</string>
+    <string name="that_match">That Match :</string>
+    <string name="details_title">Details</string>
+    <string name="reviews_title">Reviews</string>
+    <string name="trailers_title">Trailers</string>
+    <string name="movie_name_not_provided">Movie Name Not Provided</string>
+    <string name="no_reviews_are_provided">No Reviews Are Provided</string>
+    <string name="author_name_not_provided">Author Name Not Provided</string>
+    <string name="movie_deleted_from_favourite">Movie deleted from favourite list</string>
+    <string name="movie_added_to_favourite">Movie added to favourite list</string>
+    <string name="failed_to_insert_movie">failed to insert movie</string>
+    <string name="movie_saved_correctly">movie saved correctly</string>
+    <string name="failed_to_delete_movie">failed to delete movie with this uri :</string>
+    <string name="movie_deleted_done">delete movie done</string>
 
 
 </resources>

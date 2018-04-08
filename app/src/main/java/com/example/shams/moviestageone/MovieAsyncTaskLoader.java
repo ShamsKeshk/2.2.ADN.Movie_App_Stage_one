@@ -11,26 +11,26 @@ import java.util.List;
 
 public class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movies>> {
 
-    private String mUrl ;
+    private String mUrl;
     private List<Movies> mMoviesList = null;
 
-    public MovieAsyncTaskLoader(Context context ,String url ){
+    public MovieAsyncTaskLoader(Context context, String url) {
         super(context);
         mUrl = url;
     }
 
     @Override
     protected void onStartLoading() {
-        if (mMoviesList != null){
+        if (mMoviesList != null) {
             deliverResult(mMoviesList);
-        }else {
-         forceLoad();
+        } else {
+            forceLoad();
         }
     }
 
     @Override
     public List<Movies> loadInBackground() {
-        if (mUrl == null){
+        if (mUrl == null) {
             return null;
         }
 

@@ -3,6 +3,8 @@ package com.example.shams.moviestageone;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.shams.moviestageone.network.connection.utils.FetchDataHttpConnection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,61 +27,25 @@ public final class QueryUtils {
     public static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
     private QueryUtils(){
+
     }
 
 
-
     public static List<Movies> fetchMovieData(String url){
-        //Done
 
-        URL mUrl = createUrl(url);
+        URL mUrl = FetchDataHttpConnection.createUrl(url);
 
         String jsonResponse = null;
 
         try {
-            jsonResponse = makeHttpRequest(mUrl);
+            jsonResponse = FetchDataHttpConnection.makeHttpRequest(mUrl);
         }catch (IOException e){
             Log.e(LOG_TAG , "error While Fetching Data");
         }
-        List<Movies> moviesList = extractJsonData(jsonResponse);
-        return moviesList;
+
+        return extractJsonData(jsonResponse);
     }
 
-    private static URL createUrl(String url){
-        //Done
-        URL mUrl = null;
-        try {
-            mUrl = new URL(url);
-        }catch (MalformedURLException e){
-            Log.e(LOG_TAG , "Invalid URL" );
-        }
-        return mUrl;
-    }
-
-    private static String makeHttpRequest(URL url) throws IOException{
-
-        //Done
-
-        if (url == null){
-            return null;
-        }
-
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream inputStream = httpURLConnection.getInputStream();
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter("\\A");
-
-            boolean hasNext = scanner.hasNext();
-            if (hasNext){
-                return scanner.next();
-            }else {
-                return null;
-            }
-        }finally {
-            httpURLConnection.disconnect();
-        }
-    }
 
     private static List<Movies> extractJsonData(String jsonResponse){
         List<Movies> moviesList = new ArrayList<>();
@@ -91,8 +57,8 @@ public final class QueryUtils {
         try {
             JSONObject rootJsonObject = new JSONObject(jsonResponse);
             JSONArray resultJsonArray = new JSONArray();
-            if (rootJsonObject.has(Constants.RESULTS_JSON_KEY)){
-                resultJsonArray = rootJsonObject.getJSONArray(Constants.RESULTS_JSON_KEY);
+            if (rootJsonObject.has(Constants.JSON_KEY_RESULTS)){
+                resultJsonArray = rootJsonObject.getJSONArray(Constants.JSON_KEY_RESULTS);
             }
             int movieId = 0;
             Double voteAverage = 0.0;
@@ -104,24 +70,24 @@ public final class QueryUtils {
             for (int i=0; i <resultJsonArray.length() ; i++){
                 JSONObject currentJsonObject = resultJsonArray.getJSONObject(i);
 
-                if (currentJsonObject.has("id")){
-                    movieId = currentJsonObject.getInt("id");
+                if (currentJsonObject.has(Constants.JSON_KEY_MOVIE_ID)){
+                    movieId = currentJsonObject.getInt(Constants.JSON_KEY_MOVIE_ID);
                 }
 
-                if (currentJsonObject.has(Constants.VOTE_AVERAGE_JSON_KEY)){
-                    voteAverage = currentJsonObject.getDouble(Constants.VOTE_AVERAGE_JSON_KEY);
+                if (currentJsonObject.has(Constants.JSON_KEY_VOTE_AVERAGE)){
+                    voteAverage = currentJsonObject.getDouble(Constants.JSON_KEY_VOTE_AVERAGE);
                 }
-                if (currentJsonObject.has(Constants.ORIGINAL_TITLE_JSON_KEY)){
-                    originalTitle = currentJsonObject.getString(Constants.ORIGINAL_TITLE_JSON_KEY);
+                if (currentJsonObject.has(Constants.JSON_KEY_ORIGINAL_TITLE)){
+                    originalTitle = currentJsonObject.getString(Constants.JSON_KEY_ORIGINAL_TITLE);
                 }
-                if (currentJsonObject.has(Constants.POSTER_PATH_JSON_KEY)){
-                    posterPath = currentJsonObject.getString(Constants.POSTER_PATH_JSON_KEY);
+                if (currentJsonObject.has(Constants.JSON_KEY_POSTER_PATH)){
+                    posterPath = currentJsonObject.getString(Constants.JSON_KEY_POSTER_PATH);
                 }
-                if (currentJsonObject.has(Constants.RELEASE_DATE_JSON_KEY)){
-                    releaseDate = currentJsonObject.getString(Constants.RELEASE_DATE_JSON_KEY);
+                if (currentJsonObject.has(Constants.JSON_KEY_RELEASE_DATE)){
+                    releaseDate = currentJsonObject.getString(Constants.JSON_KEY_RELEASE_DATE);
                 }
-                if (currentJsonObject.has(Constants.OVERVIEW_JSON_KEY)){
-                    overview = currentJsonObject.getString(Constants.OVERVIEW_JSON_KEY);
+                if (currentJsonObject.has(Constants.JSON_KEY_OVERVIEW)){
+                    overview = currentJsonObject.getString(Constants.JSON_KEY_OVERVIEW);
                 }
 
                 moviesList.add(new Movies(movieId,voteAverage ,originalTitle,posterPath,releaseDate,overview));

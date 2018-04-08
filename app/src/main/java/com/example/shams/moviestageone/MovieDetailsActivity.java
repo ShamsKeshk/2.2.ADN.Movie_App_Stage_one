@@ -1,47 +1,31 @@
 package com.example.shams.moviestageone;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.shams.moviestageone.database.FMContract;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
-
 import com.example.shams.moviestageone.database.FMDbHelper;
 import com.example.shams.moviestageone.movie.details.MovieDetailsFragmentAdapter;
 
-public class MovieDetailsActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
-
-
-    private final String TAG = MainActivity.class.getSimpleName();
-
-    private Movies currentMovie;
-    private int isFavourite ;
+public class MovieDetailsActivity extends AppCompatActivity {
 
     private boolean isMovieFavourite ;
 
     private FMDbHelper fmDbHelper;
 
-    Toast t;
-
-    Menu menu;
-
+    public static Movies currentFavouriteMovie;
+    private Toast toast;
+    private Movies currentMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,71 +34,66 @@ public class MovieDetailsActivity extends AppCompatActivity
 
         fmDbHelper = new FMDbHelper(this);
 
-        //
-
-        Log.d(TAG, "onCreate: ");
-
         TabLayout tabLayout = findViewById(R.id.tl_movie_details_tab_id);
 
         ViewPager viewPager = findViewById(R.id.vp_movie_details_tab_id);
 
         MovieDetailsFragmentAdapter movieDetailsFragmentAdapter
-                = new MovieDetailsFragmentAdapter(getSupportFragmentManager());
+                = new MovieDetailsFragmentAdapter(getSupportFragmentManager(), this);
         tabLayout.setupWithViewPager(viewPager, true);
 
         viewPager.setAdapter(movieDetailsFragmentAdapter);
 
-        currentMovie = getIntent().getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
-
-
-        isMovieFavourite = hasObject(String.valueOf(currentMovie.getMovieId()));
-
-
-        if (isMovieFavourite){
-            isFavourite = 1;
-        }else {
-            isFavourite = 0;
+        if (currentFavouriteMovie != null) {
+            currentMovie = currentFavouriteMovie;
+        } else {
+            currentMovie = getIntent().getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
         }
 
-        makeToast(String.valueOf(isMovieFavourite));
+        isMovieFavourite = hasObject(String.valueOf(currentMovie.getMovieId()));
 
     }
 
     private ContentValues getContentValuesColumns() {
 
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(MoviesEntry.COLUMN_MOVIE_ID,currentMovie.getMovieId());
         contentValues.put(MoviesEntry.COLUMN_MOVIE_NAME,currentMovie.getOriginalTitle());
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_RELEASE_DATE, currentMovie.getReleaseDate());
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_VOTE_AVERAGE, String.valueOf(currentMovie.getVoteAverage()));
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_OVERVIEW, currentMovie.getOverview());
         contentValues.put(MoviesEntry.COLUMN_MOVIE_POSTER,currentMovie.getPosterPath());
-        contentValues.put(MoviesEntry.COLUMN_IS_FAVOURITE,isFavourite);
 
+        if (isMovieFavourite) {
+            contentValues.put(MoviesEntry.COLUMN_IS_FAVOURITE, MoviesEntry.IS_FAVOURITE_TRUE);
+        } else {
+            contentValues.put(MoviesEntry.COLUMN_IS_FAVOURITE, MoviesEntry.IS_FAVOURITE_FALSE);
+        }
 
         return contentValues;
     }
 
         private void makeToast(String message){
 
-            if (t != null){
-                t.cancel();
+            if (toast != null) {
+                toast.cancel();
             }
-            t =    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG);
+            toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
 
-            t.show();
+            toast.show();
         }
 
     public boolean hasObject(String id) {
         SQLiteDatabase db = fmDbHelper.getWritableDatabase();
         String selectString = "SELECT * FROM " + MoviesEntry.TABLE_NAME +
-                " WHERE " + MoviesEntry.COLUMN_MOVIE_ID + " = " + currentMovie.getMovieId();
+                " WHERE " + MoviesEntry.COLUMN_MOVIE_ID + " = " + id;
 
-        // Add the String you are searching by here.
-        // Put it in an array to avoid an unrecognized token error
         Cursor cursor = db.rawQuery(selectString,null);
 
         if(cursor.getCount() <= 0){
            cursor.close();
            db.close();
-            Log.d(TAG, String.format("%d records found", cursor.getCount()));
 
             return false;
         }
@@ -123,36 +102,19 @@ public class MovieDetailsActivity extends AppCompatActivity
         return true;
     }
 
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.favourite_detail_activity,menu);
 
         return true;
-
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (isMovieFavourite){
-            menu.getItem(0).setIcon(R.drawable.ic_star_yello_36px);
+            menu.getItem(0).setIcon(R.drawable.ic_favorite_red_36px);
         }else {
-            menu.getItem(0).setIcon(R.drawable.ic_filter_list_white_36px);
+            menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_36px);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -163,24 +125,33 @@ public class MovieDetailsActivity extends AppCompatActivity
         switch (id) {
             case R.id.favourite_icon_id_detail_activity:
                 if (isMovieFavourite) {
-                    item.setIcon(R.drawable.ic_filter_list_white_36px);
+                    item.setIcon(R.drawable.ic_favorite_border_white_36px);
                     isMovieFavourite = false;
-                    makeToast(String.valueOf(isMovieFavourite));
+                    makeToast(getString(R.string.movie_deleted_from_favourite));
                     deleteProducts();
                 }else {
-                    item.setIcon(R.drawable.ic_star_yello_36px);
+                    item.setIcon(R.drawable.ic_favorite_red_36px);
                     isMovieFavourite = true;
-                    makeToast(String.valueOf(isMovieFavourite));
+                    makeToast(getString(R.string.movie_added_to_favourite));
                     insertInventoryProduct();
                 }
                 return true;
+            case android.R.id.home:
+                currentFavouriteMovie = null;
+                NavUtils.navigateUpFromSameTask(this);
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        currentFavouriteMovie = null;
+    }
+
     private void insertInventoryProduct() {
-        //get Values From Views To Start Insert Them Into The Database
 
             ContentValues contentValues = getContentValuesColumns();
 
@@ -189,9 +160,9 @@ public class MovieDetailsActivity extends AppCompatActivity
             Uri newUri = getContentResolver().insert(MoviesEntry.CONTENT_URI, contentValues);
 
             if (newUri == null) {
-                makeToast("failed_to_insert_product");
+                makeToast(getString(R.string.failed_to_insert_movie));
             } else {
-                makeToast("product_saved_correctly");
+                makeToast(getString(R.string.movie_saved_correctly));
             }
 
     }
@@ -206,9 +177,9 @@ public class MovieDetailsActivity extends AppCompatActivity
         }
 
         if (rowsDeleted == 0) {
-            makeToast("failed_to_delete_products_with_this_uri" + MoviesEntry.CONTENT_URI );
+            makeToast(getString(R.string.failed_to_delete_movie) + MoviesEntry.CONTENT_URI);
         } else {
-            makeToast("delete_product_done " + MoviesEntry.CONTENT_URI  + rowsDeleted);
+            makeToast(getString(R.string.movie_deleted_done));
         }
     }
 

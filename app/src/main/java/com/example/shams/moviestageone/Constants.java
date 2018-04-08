@@ -10,12 +10,24 @@ public class Constants {
     public static final String API_KEY = "api_key";
     public static final String API_KEY_VALUE = "c50f5aa4e7c95a2a553d29b81aad6dd0";
 
-    public static final String RESULTS_JSON_KEY = "results" ;
-    public static final String VOTE_AVERAGE_JSON_KEY = "vote_average" ;
-    public static final String ORIGINAL_TITLE_JSON_KEY = "original_title" ;
-    public static final String OVERVIEW_JSON_KEY = "overview" ;
-    public static final String RELEASE_DATE_JSON_KEY = "release_date" ;
-    public static final String POSTER_PATH_JSON_KEY = "poster_path" ;
+    //JSON KEYS
+    public static final String JSON_KEY_RESULTS = "results";
+
+    //JSON MOVIE KEYS
+    public static final String JSON_KEY_MOVIE_ID = "id";
+    public static final String JSON_KEY_VOTE_AVERAGE = "vote_average";
+    public static final String JSON_KEY_ORIGINAL_TITLE = "original_title";
+    public static final String JSON_KEY_OVERVIEW = "overview";
+    public static final String JSON_KEY_RELEASE_DATE = "release_date";
+    public static final String JSON_KEY_POSTER_PATH = "poster_path";
+
+    //JSON MOVIE REVIEWS KEYS
+    public static final String JSON_KEY_REVIEW_AUTHOR = "author";
+    public static final String JSON_KEY_REVIEW_CONTENT = "content";
+
+    //JSON MOVIE TRAILERS KEYS
+    public static final String JSON_KEY_TRAILER_KEY = "key";
+    public static final String JSON_KEY_TRAILER_NAME = "name";
 
     //Image
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";

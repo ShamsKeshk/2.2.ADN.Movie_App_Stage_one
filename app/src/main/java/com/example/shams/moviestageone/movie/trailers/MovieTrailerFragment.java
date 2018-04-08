@@ -1,6 +1,5 @@
 package com.example.shams.moviestageone.movie.trailers;
 
-import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,13 +10,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.MovieDetailsActivity;
 import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
 
@@ -26,8 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.ContentValues.TAG;
 
 
 public class MovieTrailerFragment extends Fragment implements
@@ -84,9 +81,14 @@ public class MovieTrailerFragment extends Fragment implements
     @Override
     public Loader<List<MovieTrailer>> onCreateLoader(int id, @Nullable Bundle args) {
 
-        Movies currentMovie = getActivity().
-                getIntent().
-                getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
+        Movies currentMovie;
+        if (MovieDetailsActivity.currentFavouriteMovie != null) {
+            currentMovie = MovieDetailsActivity.currentFavouriteMovie;
+        } else {
+            currentMovie = getActivity().
+                    getIntent().
+                    getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
+        }
 
         int movieId = currentMovie.getMovieId() ;
 
@@ -95,8 +97,6 @@ public class MovieTrailerFragment extends Fragment implements
                 .appendEncodedPath("videos")
                 .appendQueryParameter(Constants.API_KEY,Constants.API_KEY_VALUE)
                 .build();
-
-        Log.e(TAG, "onCreateLoader: " + movieTrailersUri );
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -130,13 +130,9 @@ public class MovieTrailerFragment extends Fragment implements
     public void onTrailerListClickListener(int position) {
         MovieTrailer movieTrailer = movieTrailerAdapter.getItem(position);
         String trailerKey = movieTrailer.getTrailerKey();
-        /*
-        Uri uri = Uri.parse("www.youtube.com/watch").buildUpon()
-                .appendQueryParameter("v",trailerKey)
-                .build();
-                */
+
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailerKey));
-       // intent.setData(uri);
+
         getActivity().startActivity(intent);
     }
 }

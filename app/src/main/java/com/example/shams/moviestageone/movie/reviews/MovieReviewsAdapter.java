@@ -1,7 +1,7 @@
 package com.example.shams.moviestageone.movie.reviews;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,7 +17,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 
 /**
  * Created by shams on 05/04/18.
@@ -48,12 +47,13 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         notifyItemRangeRemoved(0, size);
     }
 
-    public CustomMovieReview getItem(int position) {
+    private CustomMovieReview getItem(int position) {
         return mMovieReviewsList.get(position);
     }
 
+    @NonNull
     @Override
-    public AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         int layoutResourceOfListItemId = R.layout.reviews_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -63,16 +63,20 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     }
 
     @Override
-    public void onBindViewHolder(AdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position) {
         CustomMovieReview currentMovieReview = getItem(position);
         if (!TextUtils.isEmpty(currentMovieReview.getmReviewContent()) &&
                 currentMovieReview.getmReviewContent() != null) {
             holder.mMovieReviewExpandTextView.setText(currentMovieReview.getmReviewContent());
+        } else {
+            holder.mMovieReviewExpandTextView.setText(context.getString(R.string.no_reviews_are_provided));
         }
 
         if (!TextUtils.isEmpty(currentMovieReview.getmAuthorName()) &&
                 currentMovieReview.getmAuthorName() != null) {
             holder.mMovieReviewAuthorTv.setText(currentMovieReview.getmAuthorName());
+        } else {
+            holder.mMovieReviewExpandTextView.setText(context.getString(R.string.author_name_not_provided));
         }
 
     }

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/favourite_icon_id_detail_activity"
-        android:icon="@drawable/ic_star_yello_36px"
+        android:icon="@drawable/ic_favorite_border_white_36px"
         android:orderInCategory="1"
         android:title="favourite"
         app:showAsAction="ifRoom" />

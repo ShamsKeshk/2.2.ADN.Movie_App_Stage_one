@@ -1,25 +1,22 @@
 package com.example.shams.moviestageone.movie.reviews;
 
-//import android.app.LoaderManager;
-//import android.content.Loader;
-import android.os.Parcelable;
-import android.support.v4.content.Loader;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.MovieDetailsActivity;
 import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
 
@@ -28,8 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.ContentValues.TAG;
 
 
 public class MovieReviewsFragment extends Fragment implements
@@ -47,8 +42,6 @@ public class MovieReviewsFragment extends Fragment implements
     MovieReviewsAdapter movieReviewsAdapter;
 
     LoaderManager loaderManager;
-
-    List<CustomMovieReview> movieReviews;
 
 
     public MovieReviewsFragment() {
@@ -86,9 +79,14 @@ public class MovieReviewsFragment extends Fragment implements
     @NonNull
     @Override
     public Loader<List<CustomMovieReview>> onCreateLoader(int id, @Nullable Bundle args) {
-        Movies currentMovie = getActivity().
-                getIntent().
-                getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
+        Movies currentMovie;
+        if (MovieDetailsActivity.currentFavouriteMovie != null) {
+            currentMovie = MovieDetailsActivity.currentFavouriteMovie;
+        } else {
+            currentMovie = getActivity().
+                    getIntent().
+                    getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
+        }
 
         int movieId = currentMovie.getMovieId() ;
 
@@ -97,8 +95,6 @@ public class MovieReviewsFragment extends Fragment implements
                 .appendEncodedPath("reviews")
                 .appendQueryParameter(Constants.API_KEY,Constants.API_KEY_VALUE)
                 .build();
-
-        Log.e(TAG, "onCreateLoader: " + movieReviewsUri );
 
         progressBar.setVisibility(View.VISIBLE);
 

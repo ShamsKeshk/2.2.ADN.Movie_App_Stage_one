@@ -26,7 +26,7 @@ public class FMContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + MOVIE_PATH;
 
-        public static final String TABLE_NAME = "movies";
+        public static final String TABLE_NAME = "movie_table";
 
         // Table Columns
         public static final String _ID = BaseColumns._ID;
@@ -35,9 +35,16 @@ public class FMContract {
 
         public static final String COLUMN_MOVIE_NAME = "movie_name";
 
+        public static final String COLUMN_MOVIE_RELEASE_DATE = "movie_release_date";
+
+        public static final String COLUMN_MOVIE_VOTE_AVERAGE = "movie_vote_average";
+
         public static final String COLUMN_IS_FAVOURITE = "is_favourite";
 
         public static final String COLUMN_MOVIE_POSTER = "movie_poster";
+
+        public static final String COLUMN_MOVIE_OVERVIEW = "movie_overview";
+
 
         //Constants Value Of is movie favourite
         public static final int IS_FAVOURITE_FALSE = 0;

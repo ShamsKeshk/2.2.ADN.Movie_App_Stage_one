@@ -9,8 +9,8 @@ import android.os.Parcelable;
 
 public class MovieTrailer implements Parcelable {
 
-    String trailerKey ;
-    String trailerName;
+    private String trailerKey ;
+    private String trailerName;
 
     public MovieTrailer(String trailerKey, String trailerName) {
         this.trailerKey = trailerKey;

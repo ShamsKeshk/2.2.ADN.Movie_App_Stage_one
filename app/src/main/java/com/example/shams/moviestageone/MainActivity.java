@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.shams.moviestageone.movie.favourite.FavouriteActivity;
+import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,6 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-
-
 
             GridLayoutManager gridLayoutManager =
                     new GridLayoutManager(this, 3);
