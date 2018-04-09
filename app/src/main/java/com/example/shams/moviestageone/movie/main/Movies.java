@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.main;
 
 import android.os.Parcel;
 import android.os.Parcelable;

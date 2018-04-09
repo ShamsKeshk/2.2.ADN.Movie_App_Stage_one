@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -13,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
 import com.example.shams.moviestageone.database.FMDbHelper;
 import com.example.shams.moviestageone.movie.details.MovieDetailsFragmentAdapter;
+import com.example.shams.moviestageone.movie.main.Movies;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 

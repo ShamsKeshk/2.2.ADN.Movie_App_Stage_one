@@ -1,13 +1,14 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.setting.preference;
 
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+
+import com.example.shams.moviestageone.R;
 
 
 public class SettingFragment extends PreferenceFragmentCompat implements

@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".movie.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,22 +20,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieDetailsActivity"
+            android:name=".movie.MovieDetailsActivity"
             android:label="@string/movie_details"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".movie.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".movie.main.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".setting.preference.SettingActivity"
             android:label="@string/filter"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".movie.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".movie.main.MainActivity" />
         </activity>
-        <activity android:name=".movie.favourite.FavouriteActivity"></activity>
+        <activity
+            android:name=".movie.favourite.FavouriteActivity"
+            android:label="@string/favourite_movie"
+            android:parentActivityName=".movie.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".movie.main.MainActivity" />
+        </activity>
 
         <provider
             android:authorities="com.example.shams.moviestageone"

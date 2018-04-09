@@ -1,20 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/sr_movie_reviews_fragment_id"
+    style="@style/width_height_match_parent"
     tools:context="com.example.shams.moviestageone.movie.reviews.MovieReviewsFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movie_reviews_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"/>
+    <FrameLayout style="@style/width_height_match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar_review_activity"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_reviews_id"
+            style="@style/width_height_match_parent"
+            android:layout_margin="@dimen/margin_8dp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_review_activity"
+            android:layout_width="@dimen/progress_par_width"
+            android:layout_height="@dimen/progress_par_height"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_empty_text_view_reviews_fragment_id"
+            style="@style/width_height_wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/there_are_no_reviews_for_this_movie"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
 
 
-</FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

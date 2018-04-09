@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.main;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;

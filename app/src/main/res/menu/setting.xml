@@ -6,7 +6,7 @@
         android:id="@+id/favourite_icon_id"
         android:icon="@drawable/ic_favourite_list_white_36px"
         android:orderInCategory="1"
-        android:title="favourite"
+        android:title="@string/favourite"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/filter_icon"

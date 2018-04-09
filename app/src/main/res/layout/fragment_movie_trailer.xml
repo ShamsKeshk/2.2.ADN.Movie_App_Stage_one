@@ -1,19 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/sr_movie_trailer_fragment_id"
+    style="@style/width_height_match_parent"
     tools:context="com.example.shams.moviestageone.movie.trailers.MovieTrailerFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movie_trailers_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"/>
+    <FrameLayout style="@style/width_height_match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar_trailer_activity"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_trailers_id"
+            style="@style/width_match_parent_height_wrap_content"
+            android:layout_margin="8dp"/>
 
-</FrameLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar_trailer_activity"
+            android:layout_width="@dimen/progress_par_width"
+            android:layout_height="@dimen/progress_par_height"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_empty_text_view_trailer_fragment_id"
+            style="@style/width_height_wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:gravity="center"
+            android:text="@string/no_internet_connection_connect_and_try_again"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_16sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
+</android.support.v4.widget.SwipeRefreshLayout>

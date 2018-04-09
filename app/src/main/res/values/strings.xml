@@ -52,6 +52,15 @@
     <string name="movie_saved_correctly">movie saved correctly</string>
     <string name="failed_to_delete_movie">failed to delete movie with this uri :</string>
     <string name="movie_deleted_done">delete movie done</string>
+    <string name="you_don_t_have_favourite_movies">You don\'t have favourite movies</string>
+    <string name="no_movies_found">No movies found</string>
+    <string name="trailer_name">Trailer Name</string>
+    <string name="there_are_no_reviews_for_this_movie">There Are No Reviews For This Movie</string>
+    <string name="no_trailers">There Are No Trailers For This Movie</string>
+    <string name="label_read_more">label_read_more</string>
+    <string name="space"> </string>
+    <string name="favourite_movie">Favourite Movies</string>
+    <string name="favourite">favourite</string>
 
 
 </resources>

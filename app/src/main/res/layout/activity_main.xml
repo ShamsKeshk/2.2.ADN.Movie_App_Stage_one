@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/width_height_match_parent"
-    tools:context="com.example.shams.moviestageone.MainActivity">
+    android:id="@+id/sr_activity_main_id"
+    tools:context="com.example.shams.moviestageone.movie.main.MainActivity">
+
+    <FrameLayout style="@style/width_height_match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movies_id"
@@ -24,5 +27,7 @@
             android:layout_width="@dimen/progress_par_width"
             android:layout_height="@dimen/progress_par_height"
             android:layout_gravity="center" />
+    </FrameLayout>
 
-</FrameLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/width_match_parent_height_wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    card_view:cardMaxElevation="1dp"
-    card_view:cardElevation="1dp"
-    card_view:cardCornerRadius="5dp"
-    android:padding="1dp"
+    android:padding="@dimen/padding_1dp"
+    card_view:cardCornerRadius="@dimen/padding_5dp"
+    card_view:cardElevation="@dimen/padding_1dp"
+    card_view:cardMaxElevation="@dimen/padding_1dp"
     card_view:cardUseCompatPadding="true"
     card_view:cardPreventCornerOverlap="false"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/width_match_parent_height_wrap_content"
         android:orientation="horizontal">
         <FrameLayout
-            android:layout_width="80dp"
-            android:layout_height="80dp">
+            android:layout_width="@dimen/movie_trailer_image_layout_size"
+            android:layout_height="@dimen/movie_trailer_image_layout_size">
             <ImageView
                 android:id="@+id/iv_trailer_image_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                style="@style/width_height_match_parent"
                 android:src="@drawable/no_image"/>
             <ImageView
                 android:id="@+id/iv_start_button_trailer_image_view_id"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/movie_trailer_play_icon_size"
+                android:layout_height="@dimen/movie_trailer_play_icon_size"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_play_arrow_white_36px"/>
         </FrameLayout>
 
         <TextView
             android:id="@+id/tv_trailer_title_text_view_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Trailer Name"
+            style="@style/width_height_wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
             android:layout_gravity="start|center"
-            android:layout_marginStart="16dp"/>
+            tools:text="@string/trailer_name" />
     </LinearLayout>
-
-
 
 </android.support.v7.widget.CardView>

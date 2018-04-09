@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.main;
 
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,8 +17,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.MovieDetailsActivity;
 import com.example.shams.moviestageone.movie.favourite.FavouriteActivity;
 import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
+import com.example.shams.moviestageone.setting.preference.SettingActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<List<Movies>> ,
-        MoviesAdapter.MovieListClickListener ,
+        MoviesAdapter.MovieListClickListener,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
     private final int MOVIE_LOADER_ID = 1;
@@ -39,6 +44,8 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
     TextView mConnectionErrorTextView;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.sr_activity_main_id)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private MoviesAdapter moviesAdapter;
     private LoaderManager loaderManager;
@@ -58,6 +65,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
 
             recyclerView.setAdapter(moviesAdapter);
 
+
             if (NetworkStatues.isConnected(this)) {
                 hideConnectionErrorDisplayData();
                 loaderManager = getLoaderManager();
@@ -66,6 +74,18 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
                 displayConnectionErrorHideData();
             }
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (NetworkStatues.isConnected(MainActivity.this)) {
+                    hideConnectionErrorDisplayData();
+                    getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, MainActivity.this);
+                } else {
+                    displayConnectionErrorHideData();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     public void hideConnectionErrorDisplayData(){
@@ -106,6 +126,9 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
 
         if (data != null){
             moviesAdapter.setmMoviesList(data);
+        } else {
+            mConnectionErrorTextView.setText(R.string.no_movies_found);
+            displayConnectionErrorHideData();
         }
     }
 

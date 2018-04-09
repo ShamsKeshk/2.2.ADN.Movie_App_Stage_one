@@ -3,10 +3,10 @@
     android:layout_width="@dimen/frame_of_list_item_activity_width"
     android:layout_height="@dimen/frame_of_list_item_activity_height"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    card_view:cardMaxElevation="1dp"
-    card_view:cardElevation="1dp"
-    card_view:cardCornerRadius="5dp"
-    android:padding="1dp"
+    android:padding="@dimen/padding_1dp"
+    card_view:cardCornerRadius="@dimen/padding_5dp"
+    card_view:cardElevation="@dimen/padding_1dp"
+    card_view:cardMaxElevation="@dimen/padding_1dp"
     card_view:cardUseCompatPadding="true"
     card_view:cardPreventCornerOverlap="false">
 

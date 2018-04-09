@@ -1,10 +1,12 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.setting.preference;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.example.shams.moviestageone.R;
 
 public class SettingActivity extends AppCompatActivity {
 

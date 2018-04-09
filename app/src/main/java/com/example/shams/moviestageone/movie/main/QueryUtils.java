@@ -1,8 +1,9 @@
-package com.example.shams.moviestageone;
+package com.example.shams.moviestageone.movie.main;
 
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.network.connection.utils.FetchDataHttpConnection;
 
 import org.json.JSONArray;
@@ -10,13 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by shams on 14/03/18.

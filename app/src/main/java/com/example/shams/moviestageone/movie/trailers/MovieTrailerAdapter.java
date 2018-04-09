@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
-import com.example.shams.moviestageone.MovieDetailsActivity;
-import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.MovieDetailsActivity;
+import com.example.shams.moviestageone.movie.main.Movies;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

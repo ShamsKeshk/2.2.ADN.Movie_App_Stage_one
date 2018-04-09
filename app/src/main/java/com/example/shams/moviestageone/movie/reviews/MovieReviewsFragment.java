@@ -8,17 +8,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
-import com.example.shams.moviestageone.MovieDetailsActivity;
-import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.MovieDetailsActivity;
+import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,10 @@ public class MovieReviewsFragment extends Fragment implements
 
     @BindView(R.id.progress_bar_review_activity)
     ProgressBar progressBar;
+    @BindView(R.id.sr_movie_reviews_fragment_id)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tv_empty_text_view_reviews_fragment_id)
+    TextView emptyTextView;
 
     MovieReviewsAdapter movieReviewsAdapter;
 
@@ -60,9 +67,32 @@ public class MovieReviewsFragment extends Fragment implements
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setAdapter(movieReviewsAdapter);
+        final LoaderManager.LoaderCallbacks loaderCallbacks = this;
 
-        loaderManager = getLoaderManager();
-        loaderManager.initLoader(MOVIE_LOADER_ID, null,this );
+
+        if (NetworkStatues.isConnected(getActivity())) {
+            hideEmptyText();
+            loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+        } else {
+            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+            displayEmptyText();
+        }
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (NetworkStatues.isConnected(getActivity())) {
+                    hideEmptyText();
+                    loaderManager.restartLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+                } else {
+                    emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+                    displayEmptyText();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -107,9 +137,23 @@ public class MovieReviewsFragment extends Fragment implements
 
         movieReviewsAdapter.clearAdapter();
 
-        if (data != null){
+        if (data != null) {
+            hideEmptyText();
             movieReviewsAdapter.setmMovieReviewsList(data);
+        } else {
+            emptyTextView.setText(getString(R.string.there_are_no_reviews_for_this_movie));
+            displayEmptyText();
         }
+    }
+
+    private void displayEmptyText() {
+        emptyTextView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    private void hideEmptyText() {
+        emptyTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override

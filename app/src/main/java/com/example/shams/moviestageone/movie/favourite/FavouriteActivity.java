@@ -12,11 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.example.shams.moviestageone.MovieDetailsActivity;
-import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
+import com.example.shams.moviestageone.movie.MovieDetailsActivity;
+import com.example.shams.moviestageone.movie.main.Movies;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +28,9 @@ public class FavouriteActivity extends AppCompatActivity
     private final int FAVOURITE_MOVIE_LOADER_ID = 50;
 
     @BindView(R.id.lv_favourite_movie_id)
-    ListView recyclerView;
+    ListView listView;
+    @BindView(R.id.tv_empty_view_favourite_activity_id)
+    TextView emptyTextView;
 
     private FavouriteMovieCursorAdapter favouriteMovieCursorAdapter;
     private Cursor cursor;
@@ -40,9 +43,9 @@ public class FavouriteActivity extends AppCompatActivity
 
         favouriteMovieCursorAdapter = new
                 FavouriteMovieCursorAdapter(this, null);
-        recyclerView.setAdapter(favouriteMovieCursorAdapter);
+        listView.setAdapter(favouriteMovieCursorAdapter);
 
-        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FavouriteActivity.this, MovieDetailsActivity.class);
@@ -51,6 +54,7 @@ public class FavouriteActivity extends AppCompatActivity
 
             }
         });
+        listView.setEmptyView(emptyTextView);
 
         getSupportLoaderManager().initLoader(FAVOURITE_MOVIE_LOADER_ID, null, this);
 
@@ -72,7 +76,12 @@ public class FavouriteActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        favouriteMovieCursorAdapter.swapCursor(data);
+        if (data == null) {
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+            favouriteMovieCursorAdapter.swapCursor(data);
+        }
         this.cursor = data;
     }
 

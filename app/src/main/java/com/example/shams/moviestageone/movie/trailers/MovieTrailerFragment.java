@@ -8,17 +8,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
-import com.example.shams.moviestageone.MovieDetailsActivity;
-import com.example.shams.moviestageone.Movies;
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.MovieDetailsActivity;
+import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,12 @@ public class MovieTrailerFragment extends Fragment implements
 
     @BindView(R.id.progress_bar_trailer_activity)
     ProgressBar progressBar;
+
+    @BindView(R.id.sr_movie_trailer_fragment_id)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.tv_empty_text_view_trailer_fragment_id)
+    TextView emptyTextView;
 
     MovieTrailerAdapter movieTrailerAdapter;
 
@@ -62,9 +71,42 @@ public class MovieTrailerFragment extends Fragment implements
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setAdapter(movieTrailerAdapter);
+        final LoaderManager.LoaderCallbacks loaderCallbacks = this;
 
-        loaderManager = getLoaderManager();
-        loaderManager.initLoader(MOVIE_LOADER_ID, null,this );
+        if (NetworkStatues.isConnected(getActivity())) {
+            hideConnectionErrorDisplayData();
+            loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+        } else {
+            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+            displayConnectionErrorHideData();
+        }
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (NetworkStatues.isConnected(getActivity())) {
+                    hideConnectionErrorDisplayData();
+                    loaderManager.restartLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+                } else {
+                    emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+                    displayConnectionErrorHideData();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    public void hideConnectionErrorDisplayData() {
+        emptyTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void displayConnectionErrorHideData() {
+        emptyTextView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -112,6 +154,9 @@ public class MovieTrailerFragment extends Fragment implements
 
         if (data != null){
             movieTrailerAdapter.setmMovieReviewsList(data);
+        } else {
+            emptyTextView.setText(getString(R.string.no_trailers));
+            displayConnectionErrorHideData();
         }
     }
 
