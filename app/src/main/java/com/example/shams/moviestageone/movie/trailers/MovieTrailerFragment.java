@@ -70,12 +70,13 @@ public class MovieTrailerFragment extends Fragment implements
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        loaderManager = getLoaderManager();
+
         recyclerView.setAdapter(movieTrailerAdapter);
         final LoaderManager.LoaderCallbacks loaderCallbacks = this;
 
         if (NetworkStatues.isConnected(getActivity())) {
             hideConnectionErrorDisplayData();
-            loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
         } else {
             emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
@@ -168,7 +169,13 @@ public class MovieTrailerFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        loaderManager.restartLoader(MOVIE_LOADER_ID,null,this);
+        if (NetworkStatues.isConnected(getActivity())) {
+            hideConnectionErrorDisplayData();
+            loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
+        } else {
+            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+            displayConnectionErrorHideData();
+        }
     }
 
     @Override

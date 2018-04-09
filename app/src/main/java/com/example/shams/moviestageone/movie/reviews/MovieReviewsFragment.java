@@ -69,10 +69,10 @@ public class MovieReviewsFragment extends Fragment implements
         recyclerView.setAdapter(movieReviewsAdapter);
         final LoaderManager.LoaderCallbacks loaderCallbacks = this;
 
+        loaderManager = getLoaderManager();
 
         if (NetworkStatues.isConnected(getActivity())) {
             hideEmptyText();
-            loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
         } else {
             emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
@@ -149,6 +149,7 @@ public class MovieReviewsFragment extends Fragment implements
     private void displayEmptyText() {
         emptyTextView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void hideEmptyText() {
@@ -164,7 +165,13 @@ public class MovieReviewsFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        loaderManager.restartLoader(MOVIE_LOADER_ID,null,this);
+        if (NetworkStatues.isConnected(getActivity())) {
+            hideEmptyText();
+            loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
+        } else {
+            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+            displayEmptyText();
+        }
     }
 
 
