@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 
 public class MovieTrailerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<MovieTrailer>>
@@ -36,6 +39,7 @@ public class MovieTrailerFragment extends Fragment implements
 
     private final int MOVIE_LOADER_ID = 3;
     private Uri movieTrailersUri;
+    private final String SAVE_INSTANCE_STATE_KEY = "trailers_saved_instance_key";
 
     @BindView(R.id.rv_movie_trailers_id)
     RecyclerView recyclerView;
@@ -53,6 +57,8 @@ public class MovieTrailerFragment extends Fragment implements
 
     LoaderManager loaderManager;
 
+    private ArrayList<MovieTrailer> movieTrailerArrayList;
+
 
     public MovieTrailerFragment() {
         // Required empty public constructor
@@ -63,26 +69,36 @@ public class MovieTrailerFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        movieTrailerAdapter = new MovieTrailerAdapter(new ArrayList<MovieTrailer>(),this);
+        final LoaderManager.LoaderCallbacks loaderCallbacks = this;
+        loaderManager = getLoaderManager();
+        movieTrailerArrayList = new ArrayList<MovieTrailer>();
+
+        if (savedInstanceState == null){
+
+            movieTrailerAdapter =
+                    new MovieTrailerAdapter(movieTrailerArrayList,this);
+
+            if (NetworkStatues.isConnected(getActivity())) {
+                hideConnectionErrorDisplayData();
+                loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+            } else {
+                emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+                displayConnectionErrorHideData();
+            }
+
+        }else {
+            movieTrailerArrayList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_KEY);
+            Log.e(TAG, "onActivityCreated: move List equal : " + movieTrailerArrayList );
+            movieTrailerAdapter =
+                    new MovieTrailerAdapter(movieTrailerArrayList,this);
+        }
 
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL ,false);
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        loaderManager = getLoaderManager();
-
         recyclerView.setAdapter(movieTrailerAdapter);
-        final LoaderManager.LoaderCallbacks loaderCallbacks = this;
-
-        if (NetworkStatues.isConnected(getActivity())) {
-            hideConnectionErrorDisplayData();
-            loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
-        } else {
-            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
-            displayConnectionErrorHideData();
-        }
-
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -97,6 +113,7 @@ public class MovieTrailerFragment extends Fragment implements
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     public void hideConnectionErrorDisplayData() {
@@ -116,6 +133,7 @@ public class MovieTrailerFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_trailer, container, false);
         ButterKnife.bind(this , view);
+
         return view;
     }
 
@@ -154,6 +172,8 @@ public class MovieTrailerFragment extends Fragment implements
         movieTrailerAdapter.clearAdapter();
 
         if (data != null){
+            hideConnectionErrorDisplayData();
+            movieTrailerArrayList = (ArrayList<MovieTrailer>) data;
             movieTrailerAdapter.setmMovieReviewsList(data);
         } else {
             emptyTextView.setText(getString(R.string.no_trailers));
@@ -167,15 +187,9 @@ public class MovieTrailerFragment extends Fragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (NetworkStatues.isConnected(getActivity())) {
-            hideConnectionErrorDisplayData();
-            loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
-        } else {
-            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
-            displayConnectionErrorHideData();
-        }
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_KEY,movieTrailerArrayList);
     }
 
     @Override
@@ -183,8 +197,22 @@ public class MovieTrailerFragment extends Fragment implements
         MovieTrailer movieTrailer = movieTrailerAdapter.getItem(position);
         String trailerKey = movieTrailer.getTrailerKey();
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailerKey));
+        Intent youtubeAppIntent;
+        Intent youtubeWebIntent;
 
-        getActivity().startActivity(intent);
+        youtubeAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailerKey));
+
+        youtubeWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailerKey));
+
+
+        if (youtubeAppIntent.resolveActivity(getActivity().getPackageManager()) != null){
+            getActivity().startActivity(youtubeAppIntent);
+        }else {
+
+            if (youtubeWebIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                getActivity().startActivity(youtubeWebIntent);
+            }
+        }
+
     }
 }

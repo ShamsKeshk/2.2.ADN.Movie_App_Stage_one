@@ -3,7 +3,9 @@ package com.example.shams.moviestageone.movie.details;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 
 public class MovieDetailsFragment extends Fragment {
@@ -42,26 +46,17 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        ButterKnife.bind(this ,view);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (MovieDetailsActivity.currentFavouriteMovie != null) {
             currentMovie = MovieDetailsActivity.currentFavouriteMovie;
+            Log.e(TAG, "onActivityCreated: current Movie Value When current Favourite Movie Not equal Null"
+                    + currentMovie );
         } else {
 
-            if (savedInstanceState == null && getActivity().getIntent() != null) {
-                if (getActivity().getIntent().hasExtra(Constants.MOVIE_OBJECT_KEY)) {
-                    currentMovie = getActivity().getIntent().getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
-                }
-            } else {
-                currentMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY);
-            }
+            currentMovie = MovieDetailsActivity.currentMovie;
         }
-
-        assert currentMovie != null;
 
         if (currentMovie.getPosterPath() != null){
             Uri imageUri = Uri.parse(Constants.BASE_IMAGE_URL).buildUpon()
@@ -83,6 +78,14 @@ public class MovieDetailsFragment extends Fragment {
         setTextToView(String.valueOf(currentMovie.getVoteAverage()), mMovieVoteAverageTextView);
 
         setTextToView(currentMovie.getOverview(), mMovieOverviewTextView);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        ButterKnife.bind(this ,view);
 
         return view;
     }
@@ -98,8 +101,8 @@ public class MovieDetailsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY , currentMovie);
         super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY,currentMovie);
     }
 
 }

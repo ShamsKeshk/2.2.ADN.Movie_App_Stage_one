@@ -35,6 +35,7 @@ public class MovieReviewsFragment extends Fragment implements
 
     private final int MOVIE_LOADER_ID = 2;
     private Uri movieReviewsUri;
+    private final String SAVE_INSTANCE_STATE_KEY = "reviews_list";
 
     @BindView(R.id.rv_movie_reviews_id)
     RecyclerView recyclerView;
@@ -50,6 +51,8 @@ public class MovieReviewsFragment extends Fragment implements
 
     LoaderManager loaderManager;
 
+    private ArrayList<CustomMovieReview> customMovieReviewList;
+
 
     public MovieReviewsFragment() {
         // Required empty public constructor
@@ -58,27 +61,37 @@ public class MovieReviewsFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        movieReviewsAdapter = new MovieReviewsAdapter(new ArrayList<CustomMovieReview>());
 
-        LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL ,false);
-
-
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        recyclerView.setAdapter(movieReviewsAdapter);
         final LoaderManager.LoaderCallbacks loaderCallbacks = this;
 
         loaderManager = getLoaderManager();
 
-        if (NetworkStatues.isConnected(getActivity())) {
-            hideEmptyText();
-            loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
-        } else {
-            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
-            displayEmptyText();
+        if (savedInstanceState == null){
+
+            customMovieReviewList = new ArrayList<CustomMovieReview>();
+            movieReviewsAdapter =
+                    new MovieReviewsAdapter(customMovieReviewList);
+
+            if (NetworkStatues.isConnected(getActivity())) {
+                hideEmptyText();
+                loaderManager.initLoader(MOVIE_LOADER_ID, null, loaderCallbacks);
+            } else {
+                emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
+                displayEmptyText();
+            }
+
+        }else {
+
+            customMovieReviewList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_KEY);
+            movieReviewsAdapter = new MovieReviewsAdapter(customMovieReviewList);
         }
 
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL ,false);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        recyclerView.setAdapter(movieReviewsAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,7 +109,7 @@ public class MovieReviewsFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_reviews, container, false);
@@ -139,11 +152,18 @@ public class MovieReviewsFragment extends Fragment implements
 
         if (data != null) {
             hideEmptyText();
+            customMovieReviewList = (ArrayList<CustomMovieReview>) data;
             movieReviewsAdapter.setmMovieReviewsList(data);
         } else {
             emptyTextView.setText(getString(R.string.there_are_no_reviews_for_this_movie));
             displayEmptyText();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_KEY,customMovieReviewList);
     }
 
     private void displayEmptyText() {
@@ -161,18 +181,5 @@ public class MovieReviewsFragment extends Fragment implements
     public void onLoaderReset(@NonNull Loader<List<CustomMovieReview>> loader) {
         movieReviewsAdapter.clearAdapter();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (NetworkStatues.isConnected(getActivity())) {
-            hideEmptyText();
-            loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
-        } else {
-            emptyTextView.setText(getString(R.string.no_internet_connection_connect_and_try_again));
-            displayEmptyText();
-        }
-    }
-
 
 }

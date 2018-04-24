@@ -28,7 +28,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     public static Movies currentFavouriteMovie;
     private Toast toast;
-    private Movies currentMovie;
+    public static Movies currentMovie;
+    private final String SAVED_INSTANCE_KEY = "current_movie_saved_instance" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,5 +187,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_INSTANCE_KEY,currentMovie);
 
+    }
 }
