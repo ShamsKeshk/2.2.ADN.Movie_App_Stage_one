@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.shams.moviestageone.BuildConfig;
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.adapters.MovieTrailerAdapter;
@@ -147,7 +148,7 @@ public class MovieTrailerFragment extends Fragment implements
         movieTrailersUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
                 .appendEncodedPath(String.valueOf(movieId))
                 .appendEncodedPath("videos")
-                .appendQueryParameter(Constants.API_KEY, Constants.API_KEY_VALUE)
+                .appendQueryParameter(Constants.API_KEY, BuildConfig.MY_API_KEY)
                 .build();
 
         progressBar.setVisibility(View.VISIBLE);

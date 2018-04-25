@@ -1,6 +1,7 @@
 package com.example.shams.moviestageone.ui;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -11,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.shams.moviestageone.BuildConfig;
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
 import com.example.shams.moviestageone.adapters.MoviesAdapter;
@@ -56,7 +59,8 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, 3);
+                new GridLayoutManager(this , calculateNoOfColumns(this));
+
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
 
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         String movieType = sharedPreferences.getString(getString(R.string.movies_type_key), getString(R.string.movies_type_popular_value));
         moviesUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
                 .appendPath(movieType)
-                .appendQueryParameter(Constants.API_KEY, Constants.API_KEY_VALUE)
+                .appendQueryParameter(Constants.API_KEY,BuildConfig.MY_API_KEY)
                 .build();
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
@@ -177,6 +181,16 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
     }
 
 

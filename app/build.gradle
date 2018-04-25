@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+Properties props = new Properties()
+File propsFile = file('api_key_file.properties')
+if (propsFile.exists()) {
+    props.load(propsFile.newDataInputStream())
+} else if (System.env.MY_API_KEY != null) {
+    props.setProperty("myApiKey", System.env.MY_API_KEY)
+} else {
+    throw new GradleException("Missing your_file_name.properties, check the api_key_file.properties")
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -10,7 +20,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
     buildTypes {
+        debug {
+            buildConfigField "String", "MY_API_KEY", "\"${props.getProperty("myApiKey")}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

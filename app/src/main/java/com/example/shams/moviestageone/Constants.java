@@ -8,7 +8,6 @@ public class Constants {
 
     public static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie";
     public static final String API_KEY = "api_key";
-    public static final String API_KEY_VALUE = "c50f5aa4e7c95a2a553d29b81aad6dd0";
 
     //JSON KEYS
     public static final String JSON_KEY_RESULTS = "results";

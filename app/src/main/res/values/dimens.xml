@@ -8,8 +8,8 @@
     <dimen name="padding_5dp">5dp</dimen>
     <dimen name="padding_1dp">1dp</dimen>
 
-    <dimen name="frame_of_list_item_activity_width">140dp</dimen>
-    <dimen name="frame_of_list_item_activity_height">190dp</dimen>
+    <dimen name="frame_of_list_item_activity_width">180dp</dimen>
+    <dimen name="frame_of_list_item_activity_height">230dp</dimen>
 
     <dimen name="progress_par_width">40dp</dimen>
     <dimen name="progress_par_height">40dp</dimen>
