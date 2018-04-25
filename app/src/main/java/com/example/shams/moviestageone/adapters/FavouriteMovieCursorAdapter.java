@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.favourite;
+package com.example.shams.moviestageone.adapters;
 
 import android.content.Context;
 import android.database.Cursor;

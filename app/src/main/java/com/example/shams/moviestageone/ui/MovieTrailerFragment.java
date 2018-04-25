@@ -1,8 +1,9 @@
-package com.example.shams.moviestageone.movie.trailers;
+package com.example.shams.moviestageone.ui;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,10 @@ import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.adapters.MovieTrailerAdapter;
+import com.example.shams.moviestageone.asynctask.MovieTrailerAsyncTask;
+import com.example.shams.moviestageone.movie.MovieTrailer;
+import com.example.shams.moviestageone.movie.Movies;
 import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 
 import java.util.ArrayList;
@@ -30,38 +32,46 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.content.ContentValues.TAG;
-
 
 public class MovieTrailerFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<MovieTrailer>>
         , MovieTrailerAdapter.TrailerListClickListener {
 
     private final int MOVIE_LOADER_ID = 3;
-    private Uri movieTrailersUri;
-    private final String SAVE_INSTANCE_STATE_KEY = "trailers_saved_instance_key";
-
+    private final String SAVE_INSTANCE_STATE_OF_TRAILERS_LIST_KEY = "saved_instance_state_of_trailers_list";
     @BindView(R.id.rv_movie_trailers_id)
     RecyclerView recyclerView;
-
     @BindView(R.id.progress_bar_trailer_activity)
     ProgressBar progressBar;
-
     @BindView(R.id.sr_movie_trailer_fragment_id)
     SwipeRefreshLayout swipeRefreshLayout;
-
     @BindView(R.id.tv_empty_text_view_trailer_fragment_id)
     TextView emptyTextView;
-
     MovieTrailerAdapter movieTrailerAdapter;
-
     LoaderManager loaderManager;
-
-    private ArrayList<MovieTrailer> movieTrailerArrayList;
-
+    private Uri movieTrailersUri;
+    private List<MovieTrailer> movieTrailerArrayList;
 
     public MovieTrailerFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            movieTrailerArrayList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_OF_TRAILERS_LIST_KEY);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_movie_trailer, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
 
@@ -71,12 +81,11 @@ public class MovieTrailerFragment extends Fragment implements
 
         final LoaderManager.LoaderCallbacks loaderCallbacks = this;
         loaderManager = getLoaderManager();
-        movieTrailerArrayList = new ArrayList<MovieTrailer>();
 
-        if (savedInstanceState == null){
-
+        if (movieTrailerArrayList == null) {
+            movieTrailerArrayList = new ArrayList<MovieTrailer>();
             movieTrailerAdapter =
-                    new MovieTrailerAdapter(movieTrailerArrayList,this);
+                    new MovieTrailerAdapter((ArrayList<MovieTrailer>) movieTrailerArrayList, this);
 
             if (NetworkStatues.isConnected(getActivity())) {
                 hideConnectionErrorDisplayData();
@@ -87,14 +96,12 @@ public class MovieTrailerFragment extends Fragment implements
             }
 
         }else {
-            movieTrailerArrayList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_KEY);
-            Log.e(TAG, "onActivityCreated: move List equal : " + movieTrailerArrayList );
             movieTrailerAdapter =
-                    new MovieTrailerAdapter(movieTrailerArrayList,this);
+                    new MovieTrailerAdapter((ArrayList<MovieTrailer>) movieTrailerArrayList, this);
         }
 
         LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL ,false);
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -116,25 +123,11 @@ public class MovieTrailerFragment extends Fragment implements
 
     }
 
-    public void hideConnectionErrorDisplayData() {
-        emptyTextView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-    }
-
-    public void displayConnectionErrorHideData() {
-        emptyTextView.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_movie_trailer, container, false);
-        ButterKnife.bind(this , view);
-
-        return view;
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_OF_TRAILERS_LIST_KEY, (ArrayList<? extends Parcelable>) movieTrailerArrayList);
     }
 
 
@@ -146,22 +139,20 @@ public class MovieTrailerFragment extends Fragment implements
         if (MovieDetailsActivity.currentFavouriteMovie != null) {
             currentMovie = MovieDetailsActivity.currentFavouriteMovie;
         } else {
-            currentMovie = getActivity().
-                    getIntent().
-                    getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
+            currentMovie = MovieDetailsActivity.currentMovie;
         }
 
-        int movieId = currentMovie.getMovieId() ;
+        int movieId = currentMovie.getMovieId();
 
         movieTrailersUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
                 .appendEncodedPath(String.valueOf(movieId))
                 .appendEncodedPath("videos")
-                .appendQueryParameter(Constants.API_KEY,Constants.API_KEY_VALUE)
+                .appendQueryParameter(Constants.API_KEY, Constants.API_KEY_VALUE)
                 .build();
 
         progressBar.setVisibility(View.VISIBLE);
 
-        return new MovieTrailerAsyncTask(getActivity(),movieTrailersUri.toString());
+        return new MovieTrailerAsyncTask(getActivity(), movieTrailersUri.toString());
 
     }
 
@@ -171,10 +162,11 @@ public class MovieTrailerFragment extends Fragment implements
 
         movieTrailerAdapter.clearAdapter();
 
-        if (data != null){
+
+        if (data != null) {
             hideConnectionErrorDisplayData();
             movieTrailerArrayList = (ArrayList<MovieTrailer>) data;
-            movieTrailerAdapter.setmMovieReviewsList(data);
+            movieTrailerAdapter.setmMovieTrailersList(data);
         } else {
             emptyTextView.setText(getString(R.string.no_trailers));
             displayConnectionErrorHideData();
@@ -184,12 +176,6 @@ public class MovieTrailerFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<List<MovieTrailer>> loader) {
         movieTrailerAdapter.clearAdapter();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_KEY,movieTrailerArrayList);
     }
 
     @Override
@@ -205,14 +191,25 @@ public class MovieTrailerFragment extends Fragment implements
         youtubeWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailerKey));
 
 
-        if (youtubeAppIntent.resolveActivity(getActivity().getPackageManager()) != null){
+        if (youtubeAppIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             getActivity().startActivity(youtubeAppIntent);
-        }else {
+        } else {
 
-            if (youtubeWebIntent.resolveActivity(getActivity().getPackageManager()) != null){
+            if (youtubeWebIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 getActivity().startActivity(youtubeWebIntent);
             }
         }
 
+    }
+
+    public void hideConnectionErrorDisplayData() {
+        emptyTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void displayConnectionErrorHideData() {
+        emptyTextView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 }

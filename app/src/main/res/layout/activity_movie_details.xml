@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/width_height_match_parent"
     android:orientation="vertical"
-    tools:context="com.example.shams.moviestageone.movie.MovieDetailsActivity">
+    tools:context="com.example.shams.moviestageone.ui.MovieDetailsActivity">
 
 
     <android.support.design.widget.TabLayout

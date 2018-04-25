@@ -1,9 +1,10 @@
-package com.example.shams.moviestageone.movie.main;
+package com.example.shams.moviestageone.utils;
 
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.movie.Movies;
 import com.example.shams.moviestageone.network.connection.utils.FetchDataHttpConnection;
 
 import org.json.JSONArray;

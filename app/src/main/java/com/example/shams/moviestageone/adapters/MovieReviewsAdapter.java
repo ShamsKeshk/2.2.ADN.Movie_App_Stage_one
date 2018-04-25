@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.reviews;
+package com.example.shams.moviestageone.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.CustomMovieReview;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.ArrayList;

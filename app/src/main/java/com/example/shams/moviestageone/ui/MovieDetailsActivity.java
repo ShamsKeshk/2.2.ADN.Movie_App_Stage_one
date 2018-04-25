@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie;
+package com.example.shams.moviestageone.ui;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -15,21 +15,19 @@ import android.widget.Toast;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.adapters.MovieDetailsFragmentAdapter;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
 import com.example.shams.moviestageone.database.FMDbHelper;
-import com.example.shams.moviestageone.movie.details.MovieDetailsFragmentAdapter;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.movie.Movies;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    private boolean isMovieFavourite ;
-
-    private FMDbHelper fmDbHelper;
-
     public static Movies currentFavouriteMovie;
-    private Toast toast;
     public static Movies currentMovie;
-    private final String SAVED_INSTANCE_KEY = "current_movie_saved_instance" ;
+    private final String SAVED_INSTANCE_KEY = "current_movie_saved_instance";
+    private boolean isMovieFavourite;
+    private FMDbHelper fmDbHelper;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +60,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(MoviesEntry.COLUMN_MOVIE_ID,currentMovie.getMovieId());
-        contentValues.put(MoviesEntry.COLUMN_MOVIE_NAME,currentMovie.getOriginalTitle());
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_ID, currentMovie.getMovieId());
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_NAME, currentMovie.getOriginalTitle());
         contentValues.put(MoviesEntry.COLUMN_MOVIE_RELEASE_DATE, currentMovie.getReleaseDate());
         contentValues.put(MoviesEntry.COLUMN_MOVIE_VOTE_AVERAGE, String.valueOf(currentMovie.getVoteAverage()));
         contentValues.put(MoviesEntry.COLUMN_MOVIE_OVERVIEW, currentMovie.getOverview());
-        contentValues.put(MoviesEntry.COLUMN_MOVIE_POSTER,currentMovie.getPosterPath());
+        contentValues.put(MoviesEntry.COLUMN_MOVIE_POSTER, currentMovie.getPosterPath());
 
         if (isMovieFavourite) {
             contentValues.put(MoviesEntry.COLUMN_IS_FAVOURITE, MoviesEntry.IS_FAVOURITE_TRUE);
@@ -78,26 +76,26 @@ public class MovieDetailsActivity extends AppCompatActivity {
         return contentValues;
     }
 
-        private void makeToast(String message){
+    private void makeToast(String message) {
 
-            if (toast != null) {
-                toast.cancel();
-            }
-            toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-
-            toast.show();
+        if (toast != null) {
+            toast.cancel();
         }
+        toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+
+        toast.show();
+    }
 
     public boolean hasObject(String id) {
         SQLiteDatabase db = fmDbHelper.getWritableDatabase();
         String selectString = "SELECT * FROM " + MoviesEntry.TABLE_NAME +
                 " WHERE " + MoviesEntry.COLUMN_MOVIE_ID + " = " + id;
 
-        Cursor cursor = db.rawQuery(selectString,null);
+        Cursor cursor = db.rawQuery(selectString, null);
 
-        if(cursor.getCount() <= 0){
-           cursor.close();
-           db.close();
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            db.close();
 
             return false;
         }
@@ -108,16 +106,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.favourite_detail_activity,menu);
+        getMenuInflater().inflate(R.menu.favourite_detail_activity, menu);
 
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (isMovieFavourite){
+        if (isMovieFavourite) {
             menu.getItem(0).setIcon(R.drawable.ic_favorite_red_36px);
-        }else {
+        } else {
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_36px);
         }
         return super.onPrepareOptionsMenu(menu);
@@ -133,7 +131,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     isMovieFavourite = false;
                     makeToast(getString(R.string.movie_deleted_from_favourite));
                     deleteProducts();
-                }else {
+                } else {
                     item.setIcon(R.drawable.ic_favorite_red_36px);
                     isMovieFavourite = true;
                     makeToast(getString(R.string.movie_added_to_favourite));
@@ -157,17 +155,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void insertInventoryProduct() {
 
-            ContentValues contentValues = getContentValuesColumns();
+        ContentValues contentValues = getContentValuesColumns();
 
-            makeToast(currentMovie.getOriginalTitle());
+        makeToast(currentMovie.getOriginalTitle());
 
-            Uri newUri = getContentResolver().insert(MoviesEntry.CONTENT_URI, contentValues);
+        Uri newUri = getContentResolver().insert(MoviesEntry.CONTENT_URI, contentValues);
 
-            if (newUri == null) {
-                makeToast(getString(R.string.failed_to_insert_movie));
-            } else {
-                makeToast(getString(R.string.movie_saved_correctly));
-            }
+        if (newUri == null) {
+            makeToast(getString(R.string.failed_to_insert_movie));
+        } else {
+            makeToast(getString(R.string.movie_saved_correctly));
+        }
 
     }
 
@@ -176,7 +174,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (MoviesEntry.CONTENT_URI != null) {
             rowsDeleted = getContentResolver()
                     .delete(MoviesEntry.CONTENT_URI
-                            ,MoviesEntry.COLUMN_MOVIE_ID + " = " + currentMovie.getMovieId()
+                            , MoviesEntry.COLUMN_MOVIE_ID + " = " + currentMovie.getMovieId()
                             , null);
         }
 
@@ -190,7 +188,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_INSTANCE_KEY,currentMovie);
-
+        outState.putParcelable(SAVED_INSTANCE_KEY, currentMovie);
     }
 }

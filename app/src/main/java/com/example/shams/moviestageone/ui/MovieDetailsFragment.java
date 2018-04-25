@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.details;
+package com.example.shams.moviestageone.ui;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.movie.Movies;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -26,6 +25,7 @@ import static android.content.ContentValues.TAG;
 
 public class MovieDetailsFragment extends Fragment {
 
+    public static String SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY = "saved_instance_of_current_movie_key";
     @BindView(R.id.iv_movie_poster_details_activity)
     ImageView mMoviePosterImageView;
     @BindView(R.id.tv_movie_original_title)
@@ -36,9 +36,7 @@ public class MovieDetailsFragment extends Fragment {
     TextView mMovieVoteAverageTextView;
     @BindView(R.id.tv_movie_overview_id)
     TextView mMovieOverviewTextView;
-
     private Movies currentMovie;
-    public static String SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY = "saved_instance_of_current_movie_key";
 
 
     public MovieDetailsFragment() {
@@ -52,13 +50,13 @@ public class MovieDetailsFragment extends Fragment {
         if (MovieDetailsActivity.currentFavouriteMovie != null) {
             currentMovie = MovieDetailsActivity.currentFavouriteMovie;
             Log.e(TAG, "onActivityCreated: current Movie Value When current Favourite Movie Not equal Null"
-                    + currentMovie );
+                    + currentMovie);
         } else {
 
             currentMovie = MovieDetailsActivity.currentMovie;
         }
 
-        if (currentMovie.getPosterPath() != null){
+        if (currentMovie.getPosterPath() != null) {
             Uri imageUri = Uri.parse(Constants.BASE_IMAGE_URL).buildUpon()
                     .appendPath(Constants.IMAGE_SIZE_W185)
                     .appendEncodedPath(currentMovie.getPosterPath())
@@ -85,7 +83,7 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        ButterKnife.bind(this ,view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
@@ -102,7 +100,7 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY,currentMovie);
+        outState.putParcelable(SAVED_INSTANCE_OF_CURRENT_MOVIE__KEY, currentMovie);
     }
 
 }

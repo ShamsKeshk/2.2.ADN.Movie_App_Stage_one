@@ -1,9 +1,10 @@
-package com.example.shams.moviestageone.movie.reviews;
+package com.example.shams.moviestageone.utils;
 
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.shams.moviestageone.Constants;
+import com.example.shams.moviestageone.movie.MovieTrailer;
 import com.example.shams.moviestageone.network.connection.utils.FetchDataHttpConnection;
 
 import org.json.JSONArray;
@@ -19,15 +20,15 @@ import java.util.List;
  * Created by shams on 05/04/18.
  */
 
-public final class ReviewQueryUtils {
+public final class MovieTrailerQueryUtils  {
 
-    private static final String LOG_TAG = ReviewQueryUtils.class.getSimpleName();
+    public static final String LOG_TAG = MovieTrailerQueryUtils.class.getSimpleName();
 
-    private ReviewQueryUtils() {
+    private MovieTrailerQueryUtils() {
 
     }
 
-    public static List<CustomMovieReview> fetchMovieData(String url){
+    public static List<MovieTrailer> fetchMovieData(String url){
 
         URL mUrl = FetchDataHttpConnection.createUrl(url);
 
@@ -42,9 +43,9 @@ public final class ReviewQueryUtils {
         return extractJsonData(jsonResponse);
     }
 
-    private static List<CustomMovieReview> extractJsonData(String jsonResponse) {
+    private static List<MovieTrailer> extractJsonData(String jsonResponse) {
 
-        List<CustomMovieReview> movieReviewsList = new ArrayList<>();
+        List<MovieTrailer> movieTrailersList = new ArrayList<>();
 
         if (TextUtils.isEmpty(jsonResponse)){
             return null;
@@ -53,31 +54,30 @@ public final class ReviewQueryUtils {
         try {
             JSONObject rootJsonObject = new JSONObject(jsonResponse);
             JSONArray resultJsonArray = new JSONArray();
-            if (rootJsonObject.has(Constants.JSON_KEY_RESULTS)){
+            if (rootJsonObject.has(Constants.JSON_KEY_RESULTS)) {
                 resultJsonArray = rootJsonObject.getJSONArray(Constants.JSON_KEY_RESULTS);
             }
 
-            String reviewAuthor = "" ;
-            String reviewContent = "";
+            String movieTrailerKey = "" ;
+            String movieTrailerName = "";
 
             for (int i = 0; i < resultJsonArray.length(); i++){
                 JSONObject currentJsonObject = resultJsonArray.getJSONObject(i);
 
-                if (currentJsonObject.has(Constants.JSON_KEY_REVIEW_AUTHOR)){
-                    reviewAuthor = currentJsonObject.getString(Constants.JSON_KEY_REVIEW_AUTHOR);
+                if (currentJsonObject.has(Constants.JSON_KEY_TRAILER_KEY)) {
+                    movieTrailerKey = currentJsonObject.getString(Constants.JSON_KEY_TRAILER_KEY);
                 }
 
-                if (currentJsonObject.has(Constants.JSON_KEY_REVIEW_CONTENT)){
-                    reviewContent = currentJsonObject.getString(Constants.JSON_KEY_REVIEW_CONTENT);
+                if (currentJsonObject.has(Constants.JSON_KEY_TRAILER_NAME)) {
+                    movieTrailerName = currentJsonObject.getString(Constants.JSON_KEY_TRAILER_NAME);
                 }
 
-                movieReviewsList.add(new CustomMovieReview(reviewAuthor, reviewContent));
+                movieTrailersList.add(new MovieTrailer(movieTrailerKey, movieTrailerName));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return movieReviewsList;
+        return movieTrailersList;
     }
-    }
-
+}

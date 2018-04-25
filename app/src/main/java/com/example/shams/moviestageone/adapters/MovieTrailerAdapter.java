@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.trailers;
+package com.example.shams.moviestageone.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,8 +15,9 @@ import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.movie.MovieTrailer;
+import com.example.shams.moviestageone.movie.Movies;
+import com.example.shams.moviestageone.ui.MovieDetailsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,8 +52,8 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
         return mMovieTrailersList;
     }
 
-    public void setmMovieReviewsList(List<MovieTrailer> mMovieReviewsList) {
-        this.mMovieTrailersList = mMovieReviewsList;
+    public void setmMovieTrailersList(List<MovieTrailer> mMovieTrailersList) {
+        this.mMovieTrailersList = mMovieTrailersList;
         notifyDataSetChanged();
     }
 

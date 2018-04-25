@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.main;
+package com.example.shams.moviestageone.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.movie.Movies;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

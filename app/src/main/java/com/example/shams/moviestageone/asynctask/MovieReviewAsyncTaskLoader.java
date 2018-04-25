@@ -1,7 +1,10 @@
-package com.example.shams.moviestageone.movie.reviews;
+package com.example.shams.moviestageone.asynctask;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.example.shams.moviestageone.movie.CustomMovieReview;
+import com.example.shams.moviestageone.utils.ReviewQueryUtils;
 
 import java.util.List;
 

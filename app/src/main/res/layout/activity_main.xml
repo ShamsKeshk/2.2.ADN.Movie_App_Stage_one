@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/width_height_match_parent"
     android:id="@+id/sr_activity_main_id"
-    tools:context="com.example.shams.moviestageone.movie.main.MainActivity">
+    tools:context="com.example.shams.moviestageone.ui.MainActivity">
 
     <FrameLayout style="@style/width_height_match_parent">
 

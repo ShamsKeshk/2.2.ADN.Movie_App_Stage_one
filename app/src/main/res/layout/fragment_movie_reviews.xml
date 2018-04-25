@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sr_movie_reviews_fragment_id"
     style="@style/width_height_match_parent"
-    tools:context="com.example.shams.moviestageone.movie.reviews.MovieReviewsFragment">
+    tools:context="com.example.shams.moviestageone.ui.MovieReviewsFragment">
 
     <FrameLayout style="@style/width_height_match_parent">
 

@@ -1,7 +1,10 @@
-package com.example.shams.moviestageone.movie.trailers;
+package com.example.shams.moviestageone.asynctask;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+
+import com.example.shams.moviestageone.movie.MovieTrailer;
+import com.example.shams.moviestageone.utils.MovieTrailerQueryUtils;
 
 import java.util.List;
 

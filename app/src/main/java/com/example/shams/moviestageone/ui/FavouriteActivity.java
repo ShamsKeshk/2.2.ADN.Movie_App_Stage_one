@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.favourite;
+package com.example.shams.moviestageone.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.shams.moviestageone.R;
+import com.example.shams.moviestageone.adapters.FavouriteMovieCursorAdapter;
 import com.example.shams.moviestageone.database.FMContract.MoviesEntry;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.movie.Movies;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

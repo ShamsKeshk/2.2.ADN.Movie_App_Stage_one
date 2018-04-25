@@ -1,7 +1,10 @@
-package com.example.shams.moviestageone.movie.main;
+package com.example.shams.moviestageone.asynctask;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+
+import com.example.shams.moviestageone.movie.Movies;
+import com.example.shams.moviestageone.utils.QueryUtils;
 
 import java.util.List;
 

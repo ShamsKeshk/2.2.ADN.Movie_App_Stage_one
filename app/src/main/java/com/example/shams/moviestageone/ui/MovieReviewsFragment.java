@@ -1,8 +1,9 @@
-package com.example.shams.moviestageone.movie.reviews;
+package com.example.shams.moviestageone.ui;
 
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,8 +20,10 @@ import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.main.Movies;
+import com.example.shams.moviestageone.adapters.MovieReviewsAdapter;
+import com.example.shams.moviestageone.asynctask.MovieReviewAsyncTaskLoader;
+import com.example.shams.moviestageone.movie.CustomMovieReview;
+import com.example.shams.moviestageone.movie.Movies;
 import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 
 import java.util.ArrayList;
@@ -31,32 +34,47 @@ import butterknife.ButterKnife;
 
 
 public class MovieReviewsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<CustomMovieReview>>{
+        LoaderManager.LoaderCallbacks<List<CustomMovieReview>> {
 
     private final int MOVIE_LOADER_ID = 2;
-    private Uri movieReviewsUri;
-    private final String SAVE_INSTANCE_STATE_KEY = "reviews_list";
-
+    private final String SAVE_INSTANCE_STATE_OF_REVIEWS_LIST_KEY = "saved_instance_state_of_reviews_list";
     @BindView(R.id.rv_movie_reviews_id)
     RecyclerView recyclerView;
-
     @BindView(R.id.progress_bar_review_activity)
     ProgressBar progressBar;
     @BindView(R.id.sr_movie_reviews_fragment_id)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tv_empty_text_view_reviews_fragment_id)
     TextView emptyTextView;
-
     MovieReviewsAdapter movieReviewsAdapter;
-
     LoaderManager loaderManager;
-
-    private ArrayList<CustomMovieReview> customMovieReviewList;
+    private Uri movieReviewsUri;
+    private List<CustomMovieReview> customMovieReviewList;
 
 
     public MovieReviewsFragment() {
         // Required empty public constructor
     }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            customMovieReviewList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_OF_REVIEWS_LIST_KEY);
+        }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_movie_reviews, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -66,11 +84,10 @@ public class MovieReviewsFragment extends Fragment implements
 
         loaderManager = getLoaderManager();
 
-        if (savedInstanceState == null){
-
+        if (customMovieReviewList == null) {
             customMovieReviewList = new ArrayList<CustomMovieReview>();
             movieReviewsAdapter =
-                    new MovieReviewsAdapter(customMovieReviewList);
+                    new MovieReviewsAdapter((ArrayList<CustomMovieReview>) customMovieReviewList);
 
             if (NetworkStatues.isConnected(getActivity())) {
                 hideEmptyText();
@@ -81,13 +98,12 @@ public class MovieReviewsFragment extends Fragment implements
             }
 
         }else {
-
-            customMovieReviewList = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_KEY);
-            movieReviewsAdapter = new MovieReviewsAdapter(customMovieReviewList);
+            movieReviewsAdapter =
+                    new MovieReviewsAdapter((ArrayList<CustomMovieReview>) customMovieReviewList);
         }
 
         LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL ,false);
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -109,13 +125,9 @@ public class MovieReviewsFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_movie_reviews, container, false);
-        ButterKnife.bind(this , view);
-
-        return view;
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_OF_REVIEWS_LIST_KEY, (ArrayList<? extends Parcelable>) customMovieReviewList);
     }
 
 
@@ -131,17 +143,17 @@ public class MovieReviewsFragment extends Fragment implements
                     getParcelableExtra(Constants.MOVIE_OBJECT_KEY);
         }
 
-        int movieId = currentMovie.getMovieId() ;
+        int movieId = currentMovie.getMovieId();
 
         movieReviewsUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
                 .appendEncodedPath(String.valueOf(movieId))
                 .appendEncodedPath("reviews")
-                .appendQueryParameter(Constants.API_KEY,Constants.API_KEY_VALUE)
+                .appendQueryParameter(Constants.API_KEY, Constants.API_KEY_VALUE)
                 .build();
 
         progressBar.setVisibility(View.VISIBLE);
 
-        return new MovieReviewAsyncTaskLoader(getActivity(),movieReviewsUri.toString());
+        return new MovieReviewAsyncTaskLoader(getActivity(), movieReviewsUri.toString());
     }
 
     @Override
@@ -161,9 +173,8 @@ public class MovieReviewsFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_KEY,customMovieReviewList);
+    public void onLoaderReset(@NonNull Loader<List<CustomMovieReview>> loader) {
+        movieReviewsAdapter.clearAdapter();
     }
 
     private void displayEmptyText() {
@@ -177,9 +188,5 @@ public class MovieReviewsFragment extends Fragment implements
         recyclerView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<CustomMovieReview>> loader) {
-        movieReviewsAdapter.clearAdapter();
-    }
 
 }

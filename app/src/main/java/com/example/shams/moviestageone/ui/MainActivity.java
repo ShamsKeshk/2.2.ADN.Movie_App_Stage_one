@@ -1,4 +1,4 @@
-package com.example.shams.moviestageone.movie.main;
+package com.example.shams.moviestageone.ui;
 
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import com.example.shams.moviestageone.Constants;
 import com.example.shams.moviestageone.R;
-import com.example.shams.moviestageone.movie.MovieDetailsActivity;
-import com.example.shams.moviestageone.movie.favourite.FavouriteActivity;
+import com.example.shams.moviestageone.adapters.MoviesAdapter;
+import com.example.shams.moviestageone.asynctask.MovieAsyncTaskLoader;
+import com.example.shams.moviestageone.movie.Movies;
 import com.example.shams.moviestageone.network.connection.utils.NetworkStatues;
 import com.example.shams.moviestageone.setting.preference.SettingActivity;
 
@@ -31,13 +32,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<List<Movies>> ,
+        implements LoaderManager.LoaderCallbacks<List<Movies>>,
         MoviesAdapter.MovieListClickListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final int MOVIE_LOADER_ID = 1;
-    private Uri moviesUri;
-
     @BindView(R.id.rv_movies_id)
     RecyclerView recyclerView;
     @BindView(R.id.tv_connection_error_id)
@@ -46,7 +45,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
     ProgressBar progressBar;
     @BindView(R.id.sr_activity_main_id)
     SwipeRefreshLayout swipeRefreshLayout;
-
+    private Uri moviesUri;
     private MoviesAdapter moviesAdapter;
     private LoaderManager loaderManager;
 
@@ -56,23 +55,23 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-            GridLayoutManager gridLayoutManager =
-                    new GridLayoutManager(this, 3);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager =
+                new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setHasFixedSize(true);
 
-            moviesAdapter = new MoviesAdapter(new ArrayList<Movies>(), this);
+        moviesAdapter = new MoviesAdapter(new ArrayList<Movies>(), this);
 
-            recyclerView.setAdapter(moviesAdapter);
+        recyclerView.setAdapter(moviesAdapter);
 
 
-            if (NetworkStatues.isConnected(this)) {
-                hideConnectionErrorDisplayData();
-                loaderManager = getLoaderManager();
-                loaderManager.initLoader(MOVIE_LOADER_ID, null, MainActivity.this);
-            } else {
-                displayConnectionErrorHideData();
-            }
+        if (NetworkStatues.isConnected(this)) {
+            hideConnectionErrorDisplayData();
+            loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_LOADER_ID, null, MainActivity.this);
+        } else {
+            displayConnectionErrorHideData();
+        }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -88,25 +87,25 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         });
     }
 
-    public void hideConnectionErrorDisplayData(){
+    public void hideConnectionErrorDisplayData() {
         mConnectionErrorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
     }
 
-    public void displayConnectionErrorHideData(){
+    public void displayConnectionErrorHideData() {
         mConnectionErrorTextView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
     }
 
-    private void setUpSharedPreference(){
+    private void setUpSharedPreference() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String movieType = sharedPreferences.getString(getString(R.string.movies_type_key),getString(R.string.movies_type_popular_value));
-         moviesUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
+        String movieType = sharedPreferences.getString(getString(R.string.movies_type_key), getString(R.string.movies_type_popular_value));
+        moviesUri = Uri.parse(Constants.BASE_MOVIE_URL).buildUpon()
                 .appendPath(movieType)
-                .appendQueryParameter(Constants.API_KEY,Constants.API_KEY_VALUE)
+                .appendQueryParameter(Constants.API_KEY, Constants.API_KEY_VALUE)
                 .build();
-         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -115,7 +114,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         progressBar.setVisibility(View.VISIBLE);
         setUpSharedPreference();
 
-        return new MovieAsyncTaskLoader(this , moviesUri.toString());
+        return new MovieAsyncTaskLoader(this, moviesUri.toString());
     }
 
     @Override
@@ -124,7 +123,7 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
 
         moviesAdapter.clearAdapter();
 
-        if (data != null){
+        if (data != null) {
             moviesAdapter.setmMoviesList(data);
         } else {
             mConnectionErrorTextView.setText(R.string.no_movies_found);
@@ -140,26 +139,26 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
     @Override
     public void onMovieListClickListener(int position) {
         Movies movies = moviesAdapter.getItem(position);
-        Intent intent = new Intent(MainActivity.this , MovieDetailsActivity.class);
+        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
         intent.putExtra(Constants.MOVIE_OBJECT_KEY, movies);
         startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       getMenuInflater().inflate(R.menu.setting,menu);
-       return true;
+        getMenuInflater().inflate(R.menu.setting, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.filter_icon :
-                startActivity(new Intent(MainActivity.this , SettingActivity.class));
+        switch (id) {
+            case R.id.filter_icon:
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
                 return true;
-            case R.id.favourite_icon_id :
-                startActivity(new Intent(MainActivity.this , FavouriteActivity.class));
+            case R.id.favourite_icon_id:
+                startActivity(new Intent(MainActivity.this, FavouriteActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -179,7 +178,6 @@ implements LoaderManager.LoaderCallbacks<List<Movies>> ,
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
-
 
 
 }
